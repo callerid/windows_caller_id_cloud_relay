@@ -1,0 +1,11 @@
+F:\Projects\Visual Studio Projects\CallerID_Cloud_Relay\CallerID_Cloud_Relay\bin\Debug\CallerID_Cloud_Relay.exe
+F:\Projects\Visual Studio Projects\CallerID_Cloud_Relay\CallerID_Cloud_Relay\bin\Debug\CallerID_Cloud_Relay.pdb
+F:\Projects\Visual Studio Projects\CallerID_Cloud_Relay\CallerID_Cloud_Relay\obj\x86\Debug\CallerID_Cloud_Relay.FrmURLSend.resources
+F:\Projects\Visual Studio Projects\CallerID_Cloud_Relay\CallerID_Cloud_Relay\obj\x86\Debug\CallerID_Cloud_Relay.Properties.Resources.resources
+F:\Projects\Visual Studio Projects\CallerID_Cloud_Relay\CallerID_Cloud_Relay\obj\x86\Debug\CallerID_Cloud_Relay.csproj.GenerateResource.Cache
+F:\Projects\Visual Studio Projects\CallerID_Cloud_Relay\CallerID_Cloud_Relay\obj\x86\Debug\CallerID_Cloud_Relay.exe
+F:\Projects\Visual Studio Projects\CallerID_Cloud_Relay\CallerID_Cloud_Relay\obj\x86\Debug\CallerID_Cloud_Relay.pdb
+F:\Projects\Visual Studio Projects\CallerID_Cloud_Relay\CallerID_Cloud_Relay\obj\x86\Debug\CallerID_Cloud_Relay.csprojResolveAssemblyReference.cache
+F:\Projects\Visual Studio Projects\CallerID_Cloud_Relay\CallerID_Cloud_Relay\bin\Debug\CID_Parser.dll
+F:\Projects\Visual Studio Projects\CallerID_Cloud_Relay\CallerID_Cloud_Relay\bin\Debug\System.Data.SQLite.DLL
+F:\Projects\Visual Studio Projects\CallerID_Cloud_Relay\CallerID_Cloud_Relay\bin\Debug\CallerID_Cloud_Relay.exe.config
