@@ -102,6 +102,30 @@ namespace CallerID_Cloud_Relay
                 AddToLog(ln, callTime, callParser.Phone, callParser.Name, callParser.IOType, callParser.SEType, callParser.DetailType, dur, callParser.Ring);
             }
 
+            // POST TO CLOUD
+            string url = rbUseSuppliedUrl.Checked ? tbSuppliedURL.Text : tbGeneratedURL.Text;
+            if (rbBasicUnit.Checked)
+            {
+                if (callParser.IsStartRecord() && !callParser.IsDetailed())
+                {
+                    PostToUrl(url, ln, callTime, callParser.Phone, callParser.Name, callParser.IOType, callParser.SEType, callParser.DetailType, dur, (callParser.IsDetailed() ? "" : callParser.Ring));
+                }
+            }
+            else
+            {
+                if (callParser.IsDetailed())
+                {
+                    if (!string.IsNullOrEmpty(tbStatus.Text))
+                    {
+                        PostToUrl(url, ln, callParser.CallTime.ToString(), callParser.Phone, callParser.Name, callParser.IOType, callParser.SEType, callParser.DetailType, dur, (callParser.IsDetailed() ? "" : callParser.Ring));
+                    }
+                }
+                else
+                {
+                    PostToUrl(url, ln, callTime, callParser.Phone, callParser.Name, callParser.IOType, callParser.SEType, callParser.DetailType, dur, (callParser.IsDetailed() ? "" : callParser.Ring));
+                }
+            }
+
         }
 
         //------------------------------------------------------------------------------------Form Functions
@@ -278,6 +302,112 @@ namespace CallerID_Cloud_Relay
             lbPassword.Enabled = ckbRequiresAuthenication.Checked;
         }
 
+        //-----------------------------------------------------------------------------Parsing of Pasted URL
+
+        private void ParseURL(object sender, EventArgs e)
+        {
+            string fullURL = Clipboard.GetText();
+
+            if (!fullURL.Contains("?"))
+            {
+                Common.MsgBox("Incorrect format.", Environment.NewLine + Environment.NewLine + "The text on clipboard does not contain a '?' which is required.");
+                return;
+            }
+
+            var urlParts = fullURL.Split('?');
+
+            string allParams = urlParts[1];
+
+            if (string.IsNullOrEmpty(allParams))
+            {
+                Common.MsgBox("No Parameters Found.", Environment.NewLine + Environment.NewLine + "The text on clipboard does not contain text after '?'.");
+                return;
+            }
+
+            int parameters = 0;
+
+            Match m = Regex.Match(allParams, linePattern);
+            if (m.Success)
+            {
+                tbLine.Text = m.Groups[2].Value.ToString();
+                parameters++;
+            }
+
+            m = Regex.Match(allParams, timePattern);
+            if (m.Success)
+            {
+                tbTime.Text = m.Groups[2].Value.ToString();
+                parameters++;
+            }
+
+            m = Regex.Match(allParams, phonePattern);
+            if (m.Success)
+            {
+                tbPhone.Text = m.Groups[2].Value.ToString();
+                parameters++;
+            }
+
+            m = Regex.Match(allParams, namePattern);
+            if (m.Success)
+            {
+                tbName.Text = m.Groups[2].Value.ToString();
+                parameters++;
+            }
+
+            m = Regex.Match(allParams, ioPattern);
+            if (m.Success)
+            {
+                tbIO.Text = m.Groups[2].Value.ToString();
+                parameters++;
+            }
+
+            m = Regex.Match(allParams, sePattern);
+            if (m.Success)
+            {
+                tbSE.Text = m.Groups[2].Value.ToString();
+                parameters++;
+            }
+
+            m = Regex.Match(allParams, statusPattern);
+            if (m.Success)
+            {
+                tbStatus.Text = m.Groups[2].Value.ToString();
+                parameters++;
+            }
+
+            m = Regex.Match(allParams, durationPattern);
+            if (m.Success)
+            {
+                tbDuration.Text = m.Groups[2].Value.ToString();
+                parameters++;
+            }
+
+            m = Regex.Match(allParams, ringNumberPattern);
+            if (m.Success)
+            {
+                tbRingNumber.Text = m.Groups[2].Value.ToString();
+                parameters++;
+            }
+
+            m = Regex.Match(allParams, ringTypePattern);
+            if (m.Success)
+            {
+                tbRingType.Text = m.Groups[2].Value.ToString();
+                parameters++;
+            }
+
+            if (parameters < 1)
+            {
+                Common.MsgBox("No Parameters Parsed.", Environment.NewLine + Environment.NewLine + "There were no parameters that could be parsed.");
+            }
+            else
+            {
+                Common.MsgBox("Paste Complete.", Environment.NewLine + Environment.NewLine + "Clipboard text succesfully parsed into your Developer Section.", true, 1500);
+                tbSuppliedURL.Text = fullURL;
+            }
+
+        }
+
         //---------------------------------------------------------------------------Deluxe Needed Variables
 
         private void FillDeluxeNames()
@@ -376,7 +506,7 @@ namespace CallerID_Cloud_Relay
             }
         }
 
-        // ------------------------------------------------------------------------------Generate URL Section
+        //-------------------------------------------------------------------------------Generate URL Section
 
         private void BtnGenerateURL_Click(object sender, EventArgs e)
         {
@@ -521,8 +651,13 @@ namespace CallerID_Cloud_Relay
             postData = postData.Replace("%Status", status);
             postData = postData.Replace("%Duration", duration);
 
-            string ringType = ring.Substring(0,1);
-            string ringNumber = ring.Substring(1,1);
+            string ringType = "";
+            string ringNumber = "";
+            if (ring.Length == 2)
+            {
+                ringType = ring.Substring(0, 1);
+                ringNumber = ring.Substring(1, 1);
+            }            
 
             postData = postData.Replace("%RingNumber", ringNumber);
             postData = postData.Replace("%RingType", ringType);

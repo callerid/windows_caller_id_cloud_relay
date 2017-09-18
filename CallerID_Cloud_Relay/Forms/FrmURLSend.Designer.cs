@@ -199,6 +199,7 @@
             this.btnPaste.TabStop = false;
             this.btnPaste.Text = "Paste";
             this.btnPaste.UseVisualStyleBackColor = false;
+            this.btnPaste.Click += new System.EventHandler(this.ParseURL);
             this.btnPaste.MouseLeave += new System.EventHandler(this.LeaveHoverOnButton);
             this.btnPaste.MouseHover += new System.EventHandler(this.HoverOnButton);
             // 
