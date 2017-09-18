@@ -53,7 +53,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\CID_Database.cs" />
+    <Compile Include="Classes\Common.cs" />
     <Compile Include="Classes\UdpReceiverClass.cs" />
+    <Compile Include="Forms\FrmPopup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmPopup.Designer.cs">
+      <DependentUpon>FrmPopup.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FrmURLSend.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -62,6 +69,9 @@
     </Compile>
     <Compile Include="App\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Forms\FrmPopup.resx">
+      <DependentUpon>FrmPopup.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmURLSend.resx">
       <DependentUpon>FrmURLSend.cs</DependentUpon>
     </EmbeddedResource>
@@ -75,7 +85,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="App\app.config" />
+    <None Include="App\app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

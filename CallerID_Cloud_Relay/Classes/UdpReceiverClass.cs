@@ -63,7 +63,10 @@ namespace cid_cm.Classes
             }
             else
             {
-                Program.FUrlSend.SetMyTitle("Caller ID Cloud Relay - " + Application.ProductVersion.ToString() + " - Listening on Port: " + UdpReceiverClass.BoundTo);
+                if (Program.FUrlSend != null)
+                {
+                    Program.FUrlSend.SetMyTitle("Caller ID Cloud Relay - " + Application.ProductVersion.ToString() + " - Listening on Port: " + UdpReceiverClass.BoundTo);
+                }
             }
 
             // Wait for broadcast

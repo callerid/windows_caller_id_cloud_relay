@@ -10,6 +10,8 @@ using cid_cm.Classes;
 using System.Threading;
 using System.Text.RegularExpressions;
 using CallerID_Cloud_Relay.Classes;
+using System.Net;
+using System.IO;
 
 namespace CallerID_Cloud_Relay
 {
@@ -19,7 +21,7 @@ namespace CallerID_Cloud_Relay
 
         // Database
         CID_Database callLog;
-
+        
         // Names of all Deluxe controls
         private List<string> deluxeNames = new List<string>();
 
@@ -32,6 +34,18 @@ namespace CallerID_Cloud_Relay
         const int logColDateTime = 5;
         const int logColNumber = 6;
         const int logColName = 7;
+
+        // Patterns for parsing pasted URL
+        string linePattern = "([&]?([A-Za-z0-9_-]+)=%Line)";
+        string ioPattern = "([&]?([A-Za-z0-9_-]+)=%IO)";
+        string sePattern = "([&]?([A-Za-z0-9_-]+)=%SE)";
+        string durationPattern = "([&]?([A-Za-z0-9_-]+)=%Duration)";
+        string ringTypePattern = "([&]?([A-Za-z0-9_-]+)=%RingType)";
+        string ringNumberPattern = "([&]?([A-Za-z0-9_-]+)=%RingNumber)";
+        string timePattern = "([&]?([A-Za-z0-9_-]+)=%Time)";
+        string phonePattern = "([&]?([A-Za-z0-9_-]+)=%Phone)";
+        string namePattern = "([&]?([A-Za-z0-9_-]+)=%Name)";
+        string statusPattern = "([&]?([A-Za-z0-9_-]+)=%Status)";
         
         // --------------------------------------------------UDP Receiever and Threading - Capturing as well
 
@@ -92,11 +106,20 @@ namespace CallerID_Cloud_Relay
 
         //------------------------------------------------------------------------------------Form Functions
 
+        delegate void SetMyTitleCallback(string title);
         public void SetMyTitle(string title)
         {
-            Text = title;
+            if (this.InvokeRequired)
+            {
+                SetMyTitleCallback d = new SetMyTitleCallback(SetMyTitle);
+                this.Invoke(d, new object[] { title });
+            }
+            else
+            {
+                Text = title;
+            }
         }
-
+        
         public FrmURLSend()
         {
             InitializeComponent();
@@ -104,8 +127,6 @@ namespace CallerID_Cloud_Relay
             // Database Functions
             callLog = new CID_Database();
             LoadLog();
-
-            Text = "CallerID.com Cloud Relay - " + Application.ProductVersion.ToString();
 
             // Start listener for UDP traffic
             Subscribe(UdpReceiver);
@@ -115,15 +136,79 @@ namespace CallerID_Cloud_Relay
             //Fill deluxe checker
             FillDeluxeNames();
             
-            // Load old values
+            // Load old values -----------------------------------------------------------
+            ckbRequiresAuthenication.Checked = Properties.Settings.Default.usesAuth;
+            tbUsername.Text = Properties.Settings.Default.username;
+            tbPassword.Text = Properties.Settings.Default.password;
 
-            // -- TODO
+            rbUseSuppliedUrl.Checked = Properties.Settings.Default.useSupplied;
+            rbUseBuiltUrl.Checked = !Properties.Settings.Default.useSupplied;
+
+            rbDeluxeUnit.Checked = Properties.Settings.Default.useDeluxe;
+            rbBasicUnit.Checked = !Properties.Settings.Default.useDeluxe;
+
+            tbSuppliedURL.Text = Properties.Settings.Default.suppliedUrl;
+
+            if (!Properties.Settings.Default.builtUrl.Contains("http:") && !Properties.Settings.Default.builtUrl.Contains("www"))
+            {
+                tbGeneratedURL.Text = "[you must first generate your URL]";
+                tbGeneratedURL.ForeColor = Color.Maroon;
+            }
+            else
+            {
+                tbGeneratedURL.Text = Properties.Settings.Default.builtUrl;
+                tbGeneratedURL.ForeColor = Color.Green;
+            }
+
+            tbServer.Text = Properties.Settings.Default.server;
+
+            tbLine.Text = Properties.Settings.Default.line;
+            tbTime.Text = Properties.Settings.Default.time;
+            tbPhone.Text = Properties.Settings.Default.phone;
+            tbName.Text = Properties.Settings.Default.name;
+            tbIO.Text = Properties.Settings.Default.io;
+            tbSE.Text = Properties.Settings.Default.se;
+            tbStatus.Text = Properties.Settings.Default.status;
+            tbDuration.Text = Properties.Settings.Default.duration;
+            tbRingNumber.Text = Properties.Settings.Default.ringNumber;
+            tbRingType.Text = Properties.Settings.Default.ringType;
+            //--------------------------------------------------------------------------
 
             // Call toggle functions
             ToggleDeluxe(new object(), new EventArgs());
             ChangeOfUrlType(new object(), new EventArgs());
             AuthRequriedCheckChange(new object(), new EventArgs());
             ToggleDevelopersSection(rbUseBuiltUrl.Checked);
+
+        }
+
+        private void FrmURLSend_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            // Save all settings
+            Properties.Settings.Default.usesAuth = ckbRequiresAuthenication.Checked;
+            Properties.Settings.Default.username = tbUsername.Text;
+            Properties.Settings.Default.password = tbPassword.Text;
+
+            Properties.Settings.Default.useSupplied = rbUseSuppliedUrl.Checked;
+            Properties.Settings.Default.useDeluxe = rbDeluxeUnit.Checked;
+
+            Properties.Settings.Default.suppliedUrl = tbSuppliedURL.Text;
+
+            Properties.Settings.Default.builtUrl = tbGeneratedURL.Text;
+            Properties.Settings.Default.server = tbServer.Text;
+
+            Properties.Settings.Default.line = tbLine.Text;
+            Properties.Settings.Default.time = tbTime.Text;
+            Properties.Settings.Default.phone = tbPhone.Text;
+            Properties.Settings.Default.name = tbName.Text;
+            Properties.Settings.Default.io = tbIO.Text;
+            Properties.Settings.Default.se = tbSE.Text;
+            Properties.Settings.Default.status = tbStatus.Text;
+            Properties.Settings.Default.duration = tbDuration.Text;
+            Properties.Settings.Default.ringNumber = tbRingNumber.Text;
+            Properties.Settings.Default.ringType = tbRingType.Text;
+
+            Properties.Settings.Default.Save();
 
         }
 
@@ -291,6 +376,191 @@ namespace CallerID_Cloud_Relay
             }
         }
 
+        // ------------------------------------------------------------------------------Generate URL Section
+
+        private void BtnGenerateURL_Click(object sender, EventArgs e)
+        {
+            StringBuilder genUrl = new StringBuilder();
+
+            if (string.IsNullOrEmpty(tbServer.Text))
+            {
+
+                tbGeneratedURL.Text = "[previous generation failed - fill out server]";
+                tbGeneratedURL.ForeColor = Color.Maroon;
+                tbServer.BackColor = Color.Pink;
+
+                Common.MsgBox("Server Cannot be blank.", Environment.NewLine + Environment.NewLine + "Please input your Cloud Server.");
+                return;
+            }
+
+            genUrl.Append(tbServer.Text + "?");
+            tbServer.BackColor = Color.Honeydew;
+
+            int parameters = 0;
+            
+            // Line
+            if (!string.IsNullOrEmpty(tbLine.Text))
+            {
+                parameters++;
+                genUrl.Append(tbLine.Text + "=%Line&");
+            }
+
+            // Time
+            if (!string.IsNullOrEmpty(tbTime.Text))
+            {
+                parameters++;
+                genUrl.Append(tbTime.Text + "=%Time&");
+            }
+
+            // Phone
+            if (!string.IsNullOrEmpty(tbPhone.Text))
+            {
+                parameters++;
+                genUrl.Append(tbPhone.Text + "=%Phone&");
+            }
+
+            // Name
+            if (!string.IsNullOrEmpty(tbName.Text))
+            {
+                parameters++;
+                genUrl.Append(tbName.Text + "=%Name&");
+            }
+
+            // IO
+            if (!string.IsNullOrEmpty(tbIO.Text))
+            {
+                parameters++;
+                genUrl.Append(tbIO.Text + "=%IO&");
+            }
+
+            // SE
+            if (!string.IsNullOrEmpty(tbSE.Text))
+            {
+                parameters++;
+                genUrl.Append(tbSE.Text + "=%SE&");
+            }
+
+            // Status
+            if (!string.IsNullOrEmpty(tbStatus.Text))
+            {
+                parameters++;
+                genUrl.Append(tbStatus.Text + "=%Status&");
+            }
+
+            // Duration
+            if (!string.IsNullOrEmpty(tbDuration.Text))
+            {
+                parameters++;
+                genUrl.Append(tbDuration.Text + "=%Duration&");
+            }
+
+            // RingNumber
+            if (!string.IsNullOrEmpty(tbRingNumber.Text))
+            {
+                parameters++;
+                genUrl.Append(tbRingNumber.Text + "=%RingNumber&");
+            }
+
+            // RingType
+            if (!string.IsNullOrEmpty(tbRingType.Text))
+            {
+                parameters++;
+                genUrl.Append(tbRingType.Text + "=%RingType&");
+            }
+
+            if (parameters == 0)
+            {
+                tbGeneratedURL.Text = "[previous generation failed - use at least one parameter]";
+                tbGeneratedURL.ForeColor = Color.Maroon;
+
+                Common.MsgBox("No Parameters Set", Environment.NewLine + Environment.NewLine + "You must use at least one parameter.");
+                return;
+            }
+
+            tbGeneratedURL.Text = genUrl.ToString().Substring(0, genUrl.ToString().Length - 1);
+            tbGeneratedURL.ForeColor = Color.Green;
+
+        }
+
+        private void BtnCopyBuiltURL_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(tbGeneratedURL.Text);
+        }
+
+        private void TimerShowBoundPort_Tick(object sender, EventArgs e)
+        {
+            timerShowBoundPort.Stop();
+            timerShowBoundPort.Enabled = false;
+            SetMyTitle("Caller ID Cloud Relay - " + Application.ProductVersion.ToString() + " - Listening on Port: " + UdpReceiverClass.BoundTo);
+        }
+
+        // -----------------------------------------------------------------------------Actual Posting of URL
+
+        private void PostToUrl(string urlFull, string line, string dateTime, string number, string name, string io,
+            string se, string status, string duration, string ring)
+        {
+
+            if(!urlFull.Contains("?"))
+            {
+                Common.MsgBox("Error Parsing URL", Environment.NewLine + Environment.NewLine + "Could not parse URL. There is no separation between URL and Params.");
+                return;
+            }
+            
+            var parts = urlFull.Split('?');
+
+            string url = parts[0];
+            string postData = parts[1];
+
+            // Replace all params
+            postData = postData.Replace("%Line", line);
+            postData = postData.Replace("%Time", dateTime);
+            postData = postData.Replace("%Phone", number);
+            postData = postData.Replace("%Name", name);
+            postData = postData.Replace("%IO", io);
+            postData = postData.Replace("%SE", se);
+            postData = postData.Replace("%Status", status);
+            postData = postData.Replace("%Duration", duration);
+
+            string ringType = ring.Substring(0,1);
+            string ringNumber = ring.Substring(1,1);
+
+            postData = postData.Replace("%RingNumber", ringNumber);
+            postData = postData.Replace("%RingType", ringType);
+
+            var data = Encoding.ASCII.GetBytes(postData);
+
+            var request = (HttpWebRequest)WebRequest.Create(url + "?" + postData);
+
+            request.Method = "POST";
+            request.ContentType = "application/x-www-form-urlencoded";
+            request.ContentLength = data.Length;
+
+            if (ckbRequiresAuthenication.Checked)
+            {
+                String encoded = System.Convert.ToBase64String(System.Text.Encoding.GetEncoding("ISO-8859-1").GetBytes(tbUsername.Text + ":" + tbPassword.Text));
+                request.Headers.Add("Authorization", "Basic " + encoded);
+            }
+            
+            using (var stream = request.GetRequestStream())
+            {
+                stream.Write(data, 0, data.Length);
+            }
+
+            var response = (HttpWebResponse)request.GetResponse();
+
+            var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
+
+            Console.WriteLine(responseString);
+        }
+
+        private void BtnTestSuppliedURL_Click(object sender, EventArgs e)
+        {
+
+            string url = rbUseSuppliedUrl.Checked ? tbSuppliedURL.Text : tbGeneratedURL.Text;
+
+            PostToUrl(url, "01", "01/01 12:00 PM", "770-263-7111", "CallerID.com", "I", "S", "n/a", "0000", "A0");
+
+        }
 
     }
 }

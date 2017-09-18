@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.gbAuthenication = new System.Windows.Forms.GroupBox();
             this.tbPassword = new System.Windows.Forms.TextBox();
             this.lbPassword = new System.Windows.Forms.Label();
@@ -37,7 +38,7 @@
             this.gbSuppliedUrl = new System.Windows.Forms.GroupBox();
             this.btnPaste = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.tbSuppliedURL = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.rbUseBuiltUrl = new System.Windows.Forms.RadioButton();
             this.rbUseSuppliedUrl = new System.Windows.Forms.RadioButton();
@@ -81,10 +82,10 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.tbGeneratedURL = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.tbServer = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.gbLog = new System.Windows.Forms.GroupBox();
             this.dgvLog = new System.Windows.Forms.DataGridView();
@@ -96,6 +97,7 @@
             this.colDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.timerShowBoundPort = new System.Windows.Forms.Timer(this.components);
             this.gbAuthenication.SuspendLayout();
             this.gbSuppliedUrl.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -127,7 +129,7 @@
             this.tbPassword.Location = new System.Drawing.Point(552, 28);
             this.tbPassword.Name = "tbPassword";
             this.tbPassword.Size = new System.Drawing.Size(139, 22);
-            this.tbPassword.TabIndex = 5;
+            this.tbPassword.TabIndex = 1;
             // 
             // lbPassword
             // 
@@ -146,7 +148,7 @@
             this.tbUsername.Location = new System.Drawing.Point(357, 28);
             this.tbUsername.Name = "tbUsername";
             this.tbUsername.Size = new System.Drawing.Size(126, 22);
-            this.tbUsername.TabIndex = 3;
+            this.tbUsername.TabIndex = 0;
             // 
             // lbUsername
             // 
@@ -176,7 +178,7 @@
             // 
             this.gbSuppliedUrl.Controls.Add(this.btnPaste);
             this.gbSuppliedUrl.Controls.Add(this.label1);
-            this.gbSuppliedUrl.Controls.Add(this.textBox1);
+            this.gbSuppliedUrl.Controls.Add(this.tbSuppliedURL);
             this.gbSuppliedUrl.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.gbSuppliedUrl.Location = new System.Drawing.Point(12, 125);
             this.gbSuppliedUrl.Name = "gbSuppliedUrl";
@@ -194,6 +196,7 @@
             this.btnPaste.Name = "btnPaste";
             this.btnPaste.Size = new System.Drawing.Size(139, 23);
             this.btnPaste.TabIndex = 10;
+            this.btnPaste.TabStop = false;
             this.btnPaste.Text = "Paste";
             this.btnPaste.UseVisualStyleBackColor = false;
             this.btnPaste.MouseLeave += new System.EventHandler(this.LeaveHoverOnButton);
@@ -210,14 +213,14 @@
             this.label1.Text = "Example: http://www.cloudserver.com/upload.php?line=%Line&&number=%Phone&&calleri" +
                 "d=%Name";
             // 
-            // textBox1
+            // tbSuppliedURL
             // 
-            this.textBox1.BackColor = System.Drawing.Color.Honeydew;
-            this.textBox1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.Location = new System.Drawing.Point(6, 32);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(685, 22);
-            this.textBox1.TabIndex = 6;
+            this.tbSuppliedURL.BackColor = System.Drawing.Color.Honeydew;
+            this.tbSuppliedURL.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbSuppliedURL.Location = new System.Drawing.Point(6, 32);
+            this.tbSuppliedURL.Name = "tbSuppliedURL";
+            this.tbSuppliedURL.Size = new System.Drawing.Size(685, 22);
+            this.tbSuppliedURL.TabIndex = 2;
             // 
             // panel1
             // 
@@ -248,7 +251,6 @@
             this.rbUseSuppliedUrl.Name = "rbUseSuppliedUrl";
             this.rbUseSuppliedUrl.Size = new System.Drawing.Size(116, 17);
             this.rbUseSuppliedUrl.TabIndex = 0;
-            this.rbUseSuppliedUrl.TabStop = true;
             this.rbUseSuppliedUrl.Text = "Use Supplied URL";
             this.rbUseSuppliedUrl.UseVisualStyleBackColor = true;
             this.rbUseSuppliedUrl.CheckedChanged += new System.EventHandler(this.ChangeOfUrlType);
@@ -271,7 +273,6 @@
             this.rbBasicUnit.Name = "rbBasicUnit";
             this.rbBasicUnit.Size = new System.Drawing.Size(76, 17);
             this.rbBasicUnit.TabIndex = 1;
-            this.rbBasicUnit.TabStop = true;
             this.rbBasicUnit.Text = "Basic Unit";
             this.rbBasicUnit.UseVisualStyleBackColor = true;
             this.rbBasicUnit.CheckedChanged += new System.EventHandler(this.ToggleDeluxe);
@@ -295,8 +296,10 @@
             this.btnTestSuppliedURL.Name = "btnTestSuppliedURL";
             this.btnTestSuppliedURL.Size = new System.Drawing.Size(233, 23);
             this.btnTestSuppliedURL.TabIndex = 9;
+            this.btnTestSuppliedURL.TabStop = false;
             this.btnTestSuppliedURL.Text = "Test Supplied URL";
             this.btnTestSuppliedURL.UseVisualStyleBackColor = true;
+            this.btnTestSuppliedURL.Click += new System.EventHandler(this.BtnTestSuppliedURL_Click);
             this.btnTestSuppliedURL.MouseLeave += new System.EventHandler(this.LeaveHoverOnButton);
             this.btnTestSuppliedURL.MouseHover += new System.EventHandler(this.HoverOnButton);
             // 
@@ -337,10 +340,10 @@
             this.gbDevSection.Controls.Add(this.label7);
             this.gbDevSection.Controls.Add(this.label6);
             this.gbDevSection.Controls.Add(this.label5);
-            this.gbDevSection.Controls.Add(this.textBox3);
+            this.gbDevSection.Controls.Add(this.tbGeneratedURL);
             this.gbDevSection.Controls.Add(this.label3);
             this.gbDevSection.Controls.Add(this.label2);
-            this.gbDevSection.Controls.Add(this.textBox2);
+            this.gbDevSection.Controls.Add(this.tbServer);
             this.gbDevSection.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.gbDevSection.Location = new System.Drawing.Point(12, 220);
             this.gbDevSection.Name = "gbDevSection";
@@ -358,8 +361,10 @@
             this.btnGenerateURL.Name = "btnGenerateURL";
             this.btnGenerateURL.Size = new System.Drawing.Size(101, 23);
             this.btnGenerateURL.TabIndex = 41;
+            this.btnGenerateURL.TabStop = false;
             this.btnGenerateURL.Text = "Generate URL";
             this.btnGenerateURL.UseVisualStyleBackColor = true;
+            this.btnGenerateURL.Click += new System.EventHandler(this.BtnGenerateURL_Click);
             this.btnGenerateURL.MouseLeave += new System.EventHandler(this.LeaveHoverOnButton);
             this.btnGenerateURL.MouseHover += new System.EventHandler(this.HoverOnButton);
             // 
@@ -371,8 +376,10 @@
             this.btnCopyBuiltURL.Name = "btnCopyBuiltURL";
             this.btnCopyBuiltURL.Size = new System.Drawing.Size(101, 23);
             this.btnCopyBuiltURL.TabIndex = 11;
+            this.btnCopyBuiltURL.TabStop = false;
             this.btnCopyBuiltURL.Text = "Copy Built URL";
             this.btnCopyBuiltURL.UseVisualStyleBackColor = true;
+            this.btnCopyBuiltURL.Click += new System.EventHandler(this.BtnCopyBuiltURL_Click);
             this.btnCopyBuiltURL.MouseLeave += new System.EventHandler(this.LeaveHoverOnButton);
             this.btnCopyBuiltURL.MouseHover += new System.EventHandler(this.HoverOnButton);
             // 
@@ -393,7 +400,7 @@
             this.tbRingType.Location = new System.Drawing.Point(192, 410);
             this.tbRingType.Name = "tbRingType";
             this.tbRingType.Size = new System.Drawing.Size(160, 22);
-            this.tbRingType.TabIndex = 38;
+            this.tbRingType.TabIndex = 13;
             // 
             // lbRingType
             // 
@@ -422,7 +429,7 @@
             this.tbRingNumber.Location = new System.Drawing.Point(192, 382);
             this.tbRingNumber.Name = "tbRingNumber";
             this.tbRingNumber.Size = new System.Drawing.Size(160, 22);
-            this.tbRingNumber.TabIndex = 35;
+            this.tbRingNumber.TabIndex = 12;
             // 
             // lbRingNumber
             // 
@@ -451,7 +458,7 @@
             this.tbDuration.Location = new System.Drawing.Point(192, 354);
             this.tbDuration.Name = "tbDuration";
             this.tbDuration.Size = new System.Drawing.Size(160, 22);
-            this.tbDuration.TabIndex = 32;
+            this.tbDuration.TabIndex = 11;
             // 
             // lbDuration
             // 
@@ -480,7 +487,7 @@
             this.tbStatus.Location = new System.Drawing.Point(192, 326);
             this.tbStatus.Name = "tbStatus";
             this.tbStatus.Size = new System.Drawing.Size(160, 22);
-            this.tbStatus.TabIndex = 29;
+            this.tbStatus.TabIndex = 10;
             // 
             // lbStatus
             // 
@@ -509,7 +516,7 @@
             this.tbSE.Location = new System.Drawing.Point(192, 298);
             this.tbSE.Name = "tbSE";
             this.tbSE.Size = new System.Drawing.Size(160, 22);
-            this.tbSE.TabIndex = 26;
+            this.tbSE.TabIndex = 9;
             // 
             // lbSE
             // 
@@ -538,7 +545,7 @@
             this.tbIO.Location = new System.Drawing.Point(192, 270);
             this.tbIO.Name = "tbIO";
             this.tbIO.Size = new System.Drawing.Size(160, 22);
-            this.tbIO.TabIndex = 23;
+            this.tbIO.TabIndex = 8;
             // 
             // lbIO
             // 
@@ -567,7 +574,7 @@
             this.tbName.Location = new System.Drawing.Point(192, 242);
             this.tbName.Name = "tbName";
             this.tbName.Size = new System.Drawing.Size(160, 22);
-            this.tbName.TabIndex = 20;
+            this.tbName.TabIndex = 7;
             // 
             // lbName
             // 
@@ -596,7 +603,7 @@
             this.tbPhone.Location = new System.Drawing.Point(192, 214);
             this.tbPhone.Name = "tbPhone";
             this.tbPhone.Size = new System.Drawing.Size(160, 22);
-            this.tbPhone.TabIndex = 17;
+            this.tbPhone.TabIndex = 6;
             // 
             // lbPhone
             // 
@@ -625,7 +632,7 @@
             this.tbTime.Location = new System.Drawing.Point(192, 186);
             this.tbTime.Name = "tbTime";
             this.tbTime.Size = new System.Drawing.Size(160, 22);
-            this.tbTime.TabIndex = 14;
+            this.tbTime.TabIndex = 5;
             // 
             // lbTime
             // 
@@ -654,7 +661,7 @@
             this.tbLine.Location = new System.Drawing.Point(192, 158);
             this.tbLine.Name = "tbLine";
             this.tbLine.Size = new System.Drawing.Size(160, 22);
-            this.tbLine.TabIndex = 6;
+            this.tbLine.TabIndex = 4;
             // 
             // lbLine
             // 
@@ -696,19 +703,20 @@
             this.label5.TabIndex = 9;
             this.label5.Text = "CallerID.com Variables";
             // 
-            // textBox3
+            // tbGeneratedURL
             // 
-            this.textBox3.BackColor = System.Drawing.Color.Honeydew;
-            this.textBox3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox3.ForeColor = System.Drawing.Color.Maroon;
-            this.textBox3.Location = new System.Drawing.Point(75, 28);
-            this.textBox3.Multiline = true;
-            this.textBox3.Name = "textBox3";
-            this.textBox3.ReadOnly = true;
-            this.textBox3.Size = new System.Drawing.Size(616, 38);
-            this.textBox3.TabIndex = 8;
-            this.textBox3.Text = "[ you must first Generate your URL]";
+            this.tbGeneratedURL.BackColor = System.Drawing.Color.Honeydew;
+            this.tbGeneratedURL.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbGeneratedURL.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbGeneratedURL.ForeColor = System.Drawing.Color.Maroon;
+            this.tbGeneratedURL.Location = new System.Drawing.Point(75, 28);
+            this.tbGeneratedURL.Multiline = true;
+            this.tbGeneratedURL.Name = "tbGeneratedURL";
+            this.tbGeneratedURL.ReadOnly = true;
+            this.tbGeneratedURL.Size = new System.Drawing.Size(616, 38);
+            this.tbGeneratedURL.TabIndex = 8;
+            this.tbGeneratedURL.TabStop = false;
+            this.tbGeneratedURL.Text = "[ you must first generate your URL]";
             // 
             // label3
             // 
@@ -730,14 +738,14 @@
             this.label2.TabIndex = 6;
             this.label2.Text = "Server:";
             // 
-            // textBox2
+            // tbServer
             // 
-            this.textBox2.BackColor = System.Drawing.Color.Honeydew;
-            this.textBox2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox2.Location = new System.Drawing.Point(75, 107);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(616, 22);
-            this.textBox2.TabIndex = 6;
+            this.tbServer.BackColor = System.Drawing.Color.Honeydew;
+            this.tbServer.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbServer.Location = new System.Drawing.Point(75, 107);
+            this.tbServer.Name = "tbServer";
+            this.tbServer.Size = new System.Drawing.Size(616, 22);
+            this.tbServer.TabIndex = 3;
             // 
             // label4
             // 
@@ -842,6 +850,12 @@
             this.colName.ReadOnly = true;
             this.colName.Width = 125;
             // 
+            // timerShowBoundPort
+            // 
+            this.timerShowBoundPort.Enabled = true;
+            this.timerShowBoundPort.Interval = 1000;
+            this.timerShowBoundPort.Tick += new System.EventHandler(this.TimerShowBoundPort_Tick);
+            // 
             // FrmURLSend
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -860,6 +874,7 @@
             this.Name = "FrmURLSend";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "CallerID.com Cloud Relay - v. 0.0";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmURLSend_FormClosing);
             this.gbAuthenication.ResumeLayout(false);
             this.gbAuthenication.PerformLayout();
             this.gbSuppliedUrl.ResumeLayout(false);
@@ -887,7 +902,7 @@
         private System.Windows.Forms.CheckBox ckbRequiresAuthenication;
         private System.Windows.Forms.GroupBox gbSuppliedUrl;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox tbSuppliedURL;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.RadioButton rbUseBuiltUrl;
         private System.Windows.Forms.RadioButton rbUseSuppliedUrl;
@@ -896,10 +911,10 @@
         private System.Windows.Forms.RadioButton rbDeluxeUnit;
         private System.Windows.Forms.Button btnTestSuppliedURL;
         private System.Windows.Forms.GroupBox gbDevSection;
-        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox tbGeneratedURL;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox tbServer;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
@@ -947,6 +962,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colDate;
         private System.Windows.Forms.DataGridViewTextBoxColumn colNumber;
         private System.Windows.Forms.DataGridViewTextBoxColumn colName;
+        private System.Windows.Forms.Timer timerShowBoundPort;
     }
 }
 
