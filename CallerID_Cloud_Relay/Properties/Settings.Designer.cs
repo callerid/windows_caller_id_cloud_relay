@@ -238,5 +238,17 @@ namespace CallerID_Cloud_Relay.Properties {
                 this["ringType"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool hideInSystemTray {
+            get {
+                return ((bool)(this["hideInSystemTray"]));
+            }
+            set {
+                this["hideInSystemTray"] = value;
+            }
+        }
     }
 }

@@ -147,7 +147,7 @@ namespace CallerID_Cloud_Relay
         public FrmURLSend()
         {
             InitializeComponent();
-
+            
             // Database Functions
             callLog = new CID_Database();
             LoadLog();
@@ -209,6 +209,8 @@ namespace CallerID_Cloud_Relay
         private void FrmURLSend_FormClosing(object sender, FormClosingEventArgs e)
         {
             // Save all settings
+            Properties.Settings.Default.hideInSystemTray = ckbHideInSystemTray.Checked;
+
             Properties.Settings.Default.usesAuth = ckbRequiresAuthenication.Checked;
             Properties.Settings.Default.username = tbUsername.Text;
             Properties.Settings.Default.password = tbPassword.Text;
@@ -234,6 +236,11 @@ namespace CallerID_Cloud_Relay
 
             Properties.Settings.Default.Save();
 
+        }
+
+        private void FrmURLSend_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Application.Exit();
         }
 
         //------------------------------------------------------------------------------------Toggling of UI
@@ -263,6 +270,15 @@ namespace CallerID_Cloud_Relay
         private void ChangeOfUrlType(object sender, EventArgs e)
         {
             ToggleDevelopersSection(rbUseBuiltUrl.Checked);
+
+            if (rbUseSuppliedUrl.Checked)
+            {
+                btnTestSuppliedURL.Text = "Test Supplied URL";
+            }
+            else
+            {
+                btnTestSuppliedURL.Text = "Test Built URL";
+            }
         }
 
         private void ToggleDeluxe(object sender, EventArgs e)
@@ -426,21 +442,7 @@ namespace CallerID_Cloud_Relay
         {
             return deluxeNames.Contains(ctrl.Name);
         }
-
-        //-----------------------------------------------------------------------------------Button Coloring
-
-        private void HoverOnButton(object sender, EventArgs e)
-        {
-            Button btn = (Button)sender;
-            btn.BackColor = Color.PaleGreen;
-        }
-
-        private void LeaveHoverOnButton(object sender, EventArgs e)
-        {
-            Button btn = (Button)sender;
-            btn.BackColor = Color.MintCream;
-        }
-
+        
         //-------------------------------------------------------------------------------------Log Functions
         
         private void AddToLog(string line,string dateTime, string number, string name, string io, 
@@ -524,7 +526,7 @@ namespace CallerID_Cloud_Relay
             }
 
             genUrl.Append(tbServer.Text + "?");
-            tbServer.BackColor = Color.Honeydew;
+            tbServer.BackColor = Color.White;
 
             int parameters = 0;
             
@@ -609,6 +611,10 @@ namespace CallerID_Cloud_Relay
 
             tbGeneratedURL.Text = genUrl.ToString().Substring(0, genUrl.ToString().Length - 1);
             tbGeneratedURL.ForeColor = Color.Green;
+            btnGenerateURL.BackColor = SystemColors.Control;
+            lbSuccessfulGen.Visible = true;
+            timerHideGenerateSuccess.Enabled = true;
+            timerHideGenerateSuccess.Start();
 
         }
 
@@ -624,7 +630,7 @@ namespace CallerID_Cloud_Relay
             SetMyTitle("Caller ID Cloud Relay - " + Application.ProductVersion.ToString() + " - Listening on Port: " + UdpReceiverClass.BoundTo);
         }
 
-        // -----------------------------------------------------------------------------Actual Posting of URL
+        //------------------------------------------------------------------------------Actual Posting of URL
 
         private void PostToUrl(string urlFull, string line, string dateTime, string number, string name, string io,
             string se, string status, string duration, string ring)
@@ -695,7 +701,84 @@ namespace CallerID_Cloud_Relay
 
             PostToUrl(url, "01", "01/01 12:00 PM", "770-263-7111", "CallerID.com", "I", "S", "n/a", "0000", "A0");
 
+            if (rbUseSuppliedUrl.Checked)
+            {
+                Common.MsgBox("Example Call Sent to Supplied URL", Environment.NewLine + Environment.NewLine + "An example Start of call record was sent to the Supplied URL.", true, 3000);
+            }
+            else
+            {
+                Common.MsgBox("Example Call Sent to Built URL", Environment.NewLine + Environment.NewLine + "An example Start of call record was sent to your custom built URL.", true, 3000);
+            }
+
         }
 
+        //-----------------------------------------------------------------------------------------------Misc
+
+        private void TimerHideGenerateSuccess_Tick(object sender, EventArgs e)
+        {
+            timerHideGenerateSuccess.Enabled = false;
+            timerHideGenerateSuccess.Stop();
+            lbSuccessfulGen.Visible = false;
+        }
+
+        private void ParamLeaveFocus(object sender, EventArgs e)
+        {
+            btnGenerateURL.BackColor = Color.Pink;
+        }
+
+        private void BtnClearLog_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Are you sure you wish to clear the entire Call Log?", "Clear Log?", MessageBoxButtons.YesNo) == DialogResult.No) return;
+
+            if (callLog.ClearLog())
+            {
+                Common.MsgBox("Call Log Cleared.", Environment.NewLine + Environment.NewLine + "Call Log cleared successfully.", true, 1500);
+                dgvLog.Rows.Clear();
+            }
+            else
+            {
+                Common.MsgBox("Call Log Failed to Clear.", Environment.NewLine + Environment.NewLine + "Failed to clear Call Log.");
+            }
+        }
+
+        private void GotoBackground()
+        {
+            sysTray.Visible = true;
+            sysTray.ShowBalloonTip(500);
+            this.Hide();
+        }
+
+        private void BringToForeground(object sender, MouseEventArgs e)
+        {
+            Program.FUrlSend.Show();
+            Program.FUrlSend.WindowState = FormWindowState.Normal;
+            sysTray.Visible = false;
+        }
+
+        private void TimerSySTrayHide_Tick(object sender, EventArgs e)
+        {
+            timerSySTrayHide.Enabled = false;
+            timerSySTrayHide.Stop();
+
+            // Load system tray setting
+            ckbHideInSystemTray.Checked = Properties.Settings.Default.hideInSystemTray;
+            if (!ckbHideInSystemTray.Checked)
+            {
+                BringToForeground(new object(), new MouseEventArgs(System.Windows.Forms.MouseButtons.Left, 0, 0, 0, 0));
+            }
+            else
+            {
+                GotoBackground();
+            }
+        }
+
+        private void CkbHideInSystemTray_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ckbHideInSystemTray.Checked)
+            {
+                GotoBackground();
+            }
+        }
+        
     }
 }

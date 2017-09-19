@@ -18,7 +18,7 @@ namespace CallerID_Cloud_Relay
             Application.SetCompatibleTextRenderingDefault(false);
 
             FUrlSend = new FrmURLSend();
-            Application.Run(FUrlSend);
+            Application.Run();
         }
     }
 }

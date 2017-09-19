@@ -29,7 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmURLSend));
             this.gbAuthenication = new System.Windows.Forms.GroupBox();
+            this.ckbHideInSystemTray = new System.Windows.Forms.CheckBox();
             this.tbPassword = new System.Windows.Forms.TextBox();
             this.lbPassword = new System.Windows.Forms.Label();
             this.tbUsername = new System.Windows.Forms.TextBox();
@@ -47,6 +49,7 @@
             this.rbDeluxeUnit = new System.Windows.Forms.RadioButton();
             this.btnTestSuppliedURL = new System.Windows.Forms.Button();
             this.gbDevSection = new System.Windows.Forms.GroupBox();
+            this.lbSuccessfulGen = new System.Windows.Forms.Label();
             this.btnGenerateURL = new System.Windows.Forms.Button();
             this.btnCopyBuiltURL = new System.Windows.Forms.Button();
             this.lbRingTypeD = new System.Windows.Forms.Label();
@@ -88,6 +91,7 @@
             this.tbServer = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.gbLog = new System.Windows.Forms.GroupBox();
+            this.btnClearLog = new System.Windows.Forms.Button();
             this.dgvLog = new System.Windows.Forms.DataGridView();
             this.colLine = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colInOut = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -98,6 +102,9 @@
             this.colNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.timerShowBoundPort = new System.Windows.Forms.Timer(this.components);
+            this.timerHideGenerateSuccess = new System.Windows.Forms.Timer(this.components);
+            this.sysTray = new System.Windows.Forms.NotifyIcon(this.components);
+            this.timerSySTrayHide = new System.Windows.Forms.Timer(this.components);
             this.gbAuthenication.SuspendLayout();
             this.gbSuppliedUrl.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -109,6 +116,7 @@
             // 
             // gbAuthenication
             // 
+            this.gbAuthenication.Controls.Add(this.ckbHideInSystemTray);
             this.gbAuthenication.Controls.Add(this.tbPassword);
             this.gbAuthenication.Controls.Add(this.lbPassword);
             this.gbAuthenication.Controls.Add(this.tbUsername);
@@ -122,9 +130,20 @@
             this.gbAuthenication.TabStop = false;
             this.gbAuthenication.Text = "Authenication";
             // 
+            // ckbHideInSystemTray
+            // 
+            this.ckbHideInSystemTray.AutoSize = true;
+            this.ckbHideInSystemTray.Location = new System.Drawing.Point(409, 0);
+            this.ckbHideInSystemTray.Name = "ckbHideInSystemTray";
+            this.ckbHideInSystemTray.Size = new System.Drawing.Size(291, 21);
+            this.ckbHideInSystemTray.TabIndex = 10;
+            this.ckbHideInSystemTray.Text = "Cloud Relay Will Load Up into System Tray";
+            this.ckbHideInSystemTray.UseVisualStyleBackColor = true;
+            this.ckbHideInSystemTray.CheckedChanged += new System.EventHandler(this.CkbHideInSystemTray_CheckedChanged);
+            // 
             // tbPassword
             // 
-            this.tbPassword.BackColor = System.Drawing.Color.Honeydew;
+            this.tbPassword.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.tbPassword.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbPassword.Location = new System.Drawing.Point(552, 28);
             this.tbPassword.Name = "tbPassword";
@@ -143,7 +162,7 @@
             // 
             // tbUsername
             // 
-            this.tbUsername.BackColor = System.Drawing.Color.Honeydew;
+            this.tbUsername.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.tbUsername.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbUsername.Location = new System.Drawing.Point(357, 28);
             this.tbUsername.Name = "tbUsername";
@@ -165,6 +184,7 @@
             this.ckbRequiresAuthenication.AutoSize = true;
             this.ckbRequiresAuthenication.Checked = true;
             this.ckbRequiresAuthenication.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ckbRequiresAuthenication.Cursor = System.Windows.Forms.Cursors.Hand;
             this.ckbRequiresAuthenication.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ckbRequiresAuthenication.Location = new System.Drawing.Point(19, 30);
             this.ckbRequiresAuthenication.Name = "ckbRequiresAuthenication";
@@ -189,7 +209,8 @@
             // 
             // btnPaste
             // 
-            this.btnPaste.BackColor = System.Drawing.Color.MintCream;
+            this.btnPaste.BackColor = System.Drawing.SystemColors.Control;
+            this.btnPaste.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnPaste.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnPaste.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnPaste.Location = new System.Drawing.Point(552, 60);
@@ -200,8 +221,6 @@
             this.btnPaste.Text = "Paste";
             this.btnPaste.UseVisualStyleBackColor = false;
             this.btnPaste.Click += new System.EventHandler(this.ParseURL);
-            this.btnPaste.MouseLeave += new System.EventHandler(this.LeaveHoverOnButton);
-            this.btnPaste.MouseHover += new System.EventHandler(this.HoverOnButton);
             // 
             // label1
             // 
@@ -216,7 +235,7 @@
             // 
             // tbSuppliedURL
             // 
-            this.tbSuppliedURL.BackColor = System.Drawing.Color.Honeydew;
+            this.tbSuppliedURL.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.tbSuppliedURL.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbSuppliedURL.Location = new System.Drawing.Point(6, 32);
             this.tbSuppliedURL.Name = "tbSuppliedURL";
@@ -252,6 +271,7 @@
             this.rbUseSuppliedUrl.Name = "rbUseSuppliedUrl";
             this.rbUseSuppliedUrl.Size = new System.Drawing.Size(116, 17);
             this.rbUseSuppliedUrl.TabIndex = 0;
+            this.rbUseSuppliedUrl.TabStop = true;
             this.rbUseSuppliedUrl.Text = "Use Supplied URL";
             this.rbUseSuppliedUrl.UseVisualStyleBackColor = true;
             this.rbUseSuppliedUrl.CheckedChanged += new System.EventHandler(this.ChangeOfUrlType);
@@ -274,6 +294,7 @@
             this.rbBasicUnit.Name = "rbBasicUnit";
             this.rbBasicUnit.Size = new System.Drawing.Size(76, 17);
             this.rbBasicUnit.TabIndex = 1;
+            this.rbBasicUnit.TabStop = true;
             this.rbBasicUnit.Text = "Basic Unit";
             this.rbBasicUnit.UseVisualStyleBackColor = true;
             this.rbBasicUnit.CheckedChanged += new System.EventHandler(this.ToggleDeluxe);
@@ -291,6 +312,7 @@
             // 
             // btnTestSuppliedURL
             // 
+            this.btnTestSuppliedURL.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnTestSuppliedURL.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnTestSuppliedURL.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnTestSuppliedURL.Location = new System.Drawing.Point(476, 88);
@@ -301,11 +323,10 @@
             this.btnTestSuppliedURL.Text = "Test Supplied URL";
             this.btnTestSuppliedURL.UseVisualStyleBackColor = true;
             this.btnTestSuppliedURL.Click += new System.EventHandler(this.BtnTestSuppliedURL_Click);
-            this.btnTestSuppliedURL.MouseLeave += new System.EventHandler(this.LeaveHoverOnButton);
-            this.btnTestSuppliedURL.MouseHover += new System.EventHandler(this.HoverOnButton);
             // 
             // gbDevSection
             // 
+            this.gbDevSection.Controls.Add(this.lbSuccessfulGen);
             this.gbDevSection.Controls.Add(this.btnGenerateURL);
             this.gbDevSection.Controls.Add(this.btnCopyBuiltURL);
             this.gbDevSection.Controls.Add(this.lbRingTypeD);
@@ -354,8 +375,21 @@
             this.gbDevSection.Text = "Developers Section - Build the relay URL by entering the Cloud Server address and" +
                 " mapping data fields";
             // 
+            // lbSuccessfulGen
+            // 
+            this.lbSuccessfulGen.AutoSize = true;
+            this.lbSuccessfulGen.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbSuccessfulGen.ForeColor = System.Drawing.Color.DarkGreen;
+            this.lbSuccessfulGen.Location = new System.Drawing.Point(182, 77);
+            this.lbSuccessfulGen.Name = "lbSuccessfulGen";
+            this.lbSuccessfulGen.Size = new System.Drawing.Size(109, 13);
+            this.lbSuccessfulGen.TabIndex = 10;
+            this.lbSuccessfulGen.Text = "Generated Correctly";
+            this.lbSuccessfulGen.Visible = false;
+            // 
             // btnGenerateURL
             // 
+            this.btnGenerateURL.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnGenerateURL.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnGenerateURL.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnGenerateURL.Location = new System.Drawing.Point(75, 72);
@@ -366,11 +400,10 @@
             this.btnGenerateURL.Text = "Generate URL";
             this.btnGenerateURL.UseVisualStyleBackColor = true;
             this.btnGenerateURL.Click += new System.EventHandler(this.BtnGenerateURL_Click);
-            this.btnGenerateURL.MouseLeave += new System.EventHandler(this.LeaveHoverOnButton);
-            this.btnGenerateURL.MouseHover += new System.EventHandler(this.HoverOnButton);
             // 
             // btnCopyBuiltURL
             // 
+            this.btnCopyBuiltURL.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnCopyBuiltURL.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnCopyBuiltURL.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCopyBuiltURL.Location = new System.Drawing.Point(590, 72);
@@ -381,8 +414,6 @@
             this.btnCopyBuiltURL.Text = "Copy Built URL";
             this.btnCopyBuiltURL.UseVisualStyleBackColor = true;
             this.btnCopyBuiltURL.Click += new System.EventHandler(this.BtnCopyBuiltURL_Click);
-            this.btnCopyBuiltURL.MouseLeave += new System.EventHandler(this.LeaveHoverOnButton);
-            this.btnCopyBuiltURL.MouseHover += new System.EventHandler(this.HoverOnButton);
             // 
             // lbRingTypeD
             // 
@@ -396,12 +427,13 @@
             // 
             // tbRingType
             // 
-            this.tbRingType.BackColor = System.Drawing.Color.Honeydew;
+            this.tbRingType.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.tbRingType.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbRingType.Location = new System.Drawing.Point(192, 410);
             this.tbRingType.Name = "tbRingType";
             this.tbRingType.Size = new System.Drawing.Size(160, 22);
             this.tbRingType.TabIndex = 13;
+            this.tbRingType.Leave += new System.EventHandler(this.ParamLeaveFocus);
             // 
             // lbRingType
             // 
@@ -425,12 +457,13 @@
             // 
             // tbRingNumber
             // 
-            this.tbRingNumber.BackColor = System.Drawing.Color.Honeydew;
+            this.tbRingNumber.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.tbRingNumber.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbRingNumber.Location = new System.Drawing.Point(192, 382);
             this.tbRingNumber.Name = "tbRingNumber";
             this.tbRingNumber.Size = new System.Drawing.Size(160, 22);
             this.tbRingNumber.TabIndex = 12;
+            this.tbRingNumber.Leave += new System.EventHandler(this.ParamLeaveFocus);
             // 
             // lbRingNumber
             // 
@@ -454,12 +487,13 @@
             // 
             // tbDuration
             // 
-            this.tbDuration.BackColor = System.Drawing.Color.Honeydew;
+            this.tbDuration.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.tbDuration.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbDuration.Location = new System.Drawing.Point(192, 354);
             this.tbDuration.Name = "tbDuration";
             this.tbDuration.Size = new System.Drawing.Size(160, 22);
             this.tbDuration.TabIndex = 11;
+            this.tbDuration.Leave += new System.EventHandler(this.ParamLeaveFocus);
             // 
             // lbDuration
             // 
@@ -483,12 +517,13 @@
             // 
             // tbStatus
             // 
-            this.tbStatus.BackColor = System.Drawing.Color.Honeydew;
+            this.tbStatus.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.tbStatus.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbStatus.Location = new System.Drawing.Point(192, 326);
             this.tbStatus.Name = "tbStatus";
             this.tbStatus.Size = new System.Drawing.Size(160, 22);
             this.tbStatus.TabIndex = 10;
+            this.tbStatus.Leave += new System.EventHandler(this.ParamLeaveFocus);
             // 
             // lbStatus
             // 
@@ -512,12 +547,13 @@
             // 
             // tbSE
             // 
-            this.tbSE.BackColor = System.Drawing.Color.Honeydew;
+            this.tbSE.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.tbSE.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbSE.Location = new System.Drawing.Point(192, 298);
             this.tbSE.Name = "tbSE";
             this.tbSE.Size = new System.Drawing.Size(160, 22);
             this.tbSE.TabIndex = 9;
+            this.tbSE.Leave += new System.EventHandler(this.ParamLeaveFocus);
             // 
             // lbSE
             // 
@@ -541,12 +577,13 @@
             // 
             // tbIO
             // 
-            this.tbIO.BackColor = System.Drawing.Color.Honeydew;
+            this.tbIO.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.tbIO.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbIO.Location = new System.Drawing.Point(192, 270);
             this.tbIO.Name = "tbIO";
             this.tbIO.Size = new System.Drawing.Size(160, 22);
             this.tbIO.TabIndex = 8;
+            this.tbIO.Leave += new System.EventHandler(this.ParamLeaveFocus);
             // 
             // lbIO
             // 
@@ -570,12 +607,13 @@
             // 
             // tbName
             // 
-            this.tbName.BackColor = System.Drawing.Color.Honeydew;
+            this.tbName.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.tbName.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbName.Location = new System.Drawing.Point(192, 242);
             this.tbName.Name = "tbName";
             this.tbName.Size = new System.Drawing.Size(160, 22);
             this.tbName.TabIndex = 7;
+            this.tbName.Leave += new System.EventHandler(this.ParamLeaveFocus);
             // 
             // lbName
             // 
@@ -599,12 +637,13 @@
             // 
             // tbPhone
             // 
-            this.tbPhone.BackColor = System.Drawing.Color.Honeydew;
+            this.tbPhone.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.tbPhone.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbPhone.Location = new System.Drawing.Point(192, 214);
             this.tbPhone.Name = "tbPhone";
             this.tbPhone.Size = new System.Drawing.Size(160, 22);
             this.tbPhone.TabIndex = 6;
+            this.tbPhone.Leave += new System.EventHandler(this.ParamLeaveFocus);
             // 
             // lbPhone
             // 
@@ -628,12 +667,13 @@
             // 
             // tbTime
             // 
-            this.tbTime.BackColor = System.Drawing.Color.Honeydew;
+            this.tbTime.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.tbTime.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbTime.Location = new System.Drawing.Point(192, 186);
             this.tbTime.Name = "tbTime";
             this.tbTime.Size = new System.Drawing.Size(160, 22);
             this.tbTime.TabIndex = 5;
+            this.tbTime.Leave += new System.EventHandler(this.ParamLeaveFocus);
             // 
             // lbTime
             // 
@@ -657,12 +697,13 @@
             // 
             // tbLine
             // 
-            this.tbLine.BackColor = System.Drawing.Color.Honeydew;
+            this.tbLine.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.tbLine.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbLine.Location = new System.Drawing.Point(192, 158);
             this.tbLine.Name = "tbLine";
             this.tbLine.Size = new System.Drawing.Size(160, 22);
             this.tbLine.TabIndex = 4;
+            this.tbLine.Leave += new System.EventHandler(this.ParamLeaveFocus);
             // 
             // lbLine
             // 
@@ -706,7 +747,7 @@
             // 
             // tbGeneratedURL
             // 
-            this.tbGeneratedURL.BackColor = System.Drawing.Color.Honeydew;
+            this.tbGeneratedURL.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.tbGeneratedURL.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.tbGeneratedURL.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbGeneratedURL.ForeColor = System.Drawing.Color.Maroon;
@@ -741,12 +782,13 @@
             // 
             // tbServer
             // 
-            this.tbServer.BackColor = System.Drawing.Color.Honeydew;
+            this.tbServer.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.tbServer.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbServer.Location = new System.Drawing.Point(75, 107);
             this.tbServer.Name = "tbServer";
             this.tbServer.Size = new System.Drawing.Size(616, 22);
             this.tbServer.TabIndex = 3;
+            this.tbServer.Leave += new System.EventHandler(this.ParamLeaveFocus);
             // 
             // label4
             // 
@@ -761,6 +803,7 @@
             // gbLog
             // 
             this.gbLog.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.gbLog.Controls.Add(this.btnClearLog);
             this.gbLog.Controls.Add(this.dgvLog);
             this.gbLog.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.gbLog.Location = new System.Drawing.Point(15, 672);
@@ -770,11 +813,25 @@
             this.gbLog.TabStop = false;
             this.gbLog.Text = "Log";
             // 
+            // btnClearLog
+            // 
+            this.btnClearLog.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnClearLog.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnClearLog.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnClearLog.Location = new System.Drawing.Point(672, 21);
+            this.btnClearLog.Name = "btnClearLog";
+            this.btnClearLog.Size = new System.Drawing.Size(19, 100);
+            this.btnClearLog.TabIndex = 42;
+            this.btnClearLog.TabStop = false;
+            this.btnClearLog.Text = "CLEAR";
+            this.btnClearLog.UseVisualStyleBackColor = true;
+            this.btnClearLog.Click += new System.EventHandler(this.BtnClearLog_Click);
+            // 
             // dgvLog
             // 
             this.dgvLog.AllowUserToAddRows = false;
             this.dgvLog.AllowUserToDeleteRows = false;
-            this.dgvLog.BackgroundColor = System.Drawing.Color.Honeydew;
+            this.dgvLog.BackgroundColor = System.Drawing.SystemColors.Control;
             this.dgvLog.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvLog.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvLog.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -857,11 +914,30 @@
             this.timerShowBoundPort.Interval = 1000;
             this.timerShowBoundPort.Tick += new System.EventHandler(this.TimerShowBoundPort_Tick);
             // 
+            // timerHideGenerateSuccess
+            // 
+            this.timerHideGenerateSuccess.Interval = 3000;
+            this.timerHideGenerateSuccess.Tick += new System.EventHandler(this.TimerHideGenerateSuccess_Tick);
+            // 
+            // sysTray
+            // 
+            this.sysTray.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.sysTray.BalloonTipText = "Cloud Relay running in background.";
+            this.sysTray.BalloonTipTitle = "Caller ID Cloud Relay";
+            this.sysTray.Icon = ((System.Drawing.Icon)(resources.GetObject("sysTray.Icon")));
+            this.sysTray.Text = "Caller ID Cloud Relay";
+            this.sysTray.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.BringToForeground);
+            // 
+            // timerSySTrayHide
+            // 
+            this.timerSySTrayHide.Enabled = true;
+            this.timerSySTrayHide.Tick += new System.EventHandler(this.TimerSySTrayHide_Tick);
+            // 
             // FrmURLSend
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.MintCream;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(724, 811);
             this.Controls.Add(this.gbLog);
             this.Controls.Add(this.label4);
@@ -872,10 +948,12 @@
             this.Controls.Add(this.gbSuppliedUrl);
             this.Controls.Add(this.gbAuthenication);
             this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FrmURLSend";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "CallerID.com Cloud Relay - v. 0.0";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmURLSend_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmURLSend_FormClosed);
             this.gbAuthenication.ResumeLayout(false);
             this.gbAuthenication.PerformLayout();
             this.gbSuppliedUrl.ResumeLayout(false);
@@ -964,6 +1042,12 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colNumber;
         private System.Windows.Forms.DataGridViewTextBoxColumn colName;
         private System.Windows.Forms.Timer timerShowBoundPort;
+        private System.Windows.Forms.Label lbSuccessfulGen;
+        private System.Windows.Forms.Timer timerHideGenerateSuccess;
+        private System.Windows.Forms.Button btnClearLog;
+        private System.Windows.Forms.NotifyIcon sysTray;
+        private System.Windows.Forms.CheckBox ckbHideInSystemTray;
+        private System.Windows.Forms.Timer timerSySTrayHide;
     }
 }
 

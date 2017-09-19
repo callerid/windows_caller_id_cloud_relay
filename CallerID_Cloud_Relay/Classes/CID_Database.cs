@@ -127,6 +127,20 @@ namespace CallerID_Cloud_Relay.Classes
             }
         }
 
+        public bool ClearLog()
+        {
+            try
+            {
+                ExecuteQuery("DELETE * FROM callLog;");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Could not clear: " + ex.ToString());
+                return false;
+            }
+        }
+
         public bool ExecuteQuery(string query)
         {
 
