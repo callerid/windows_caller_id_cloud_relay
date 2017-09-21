@@ -601,9 +601,9 @@
             this.lbNameD.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbNameD.Location = new System.Drawing.Point(384, 242);
             this.lbNameD.Name = "lbNameD";
-            this.lbNameD.Size = new System.Drawing.Size(97, 17);
+            this.lbNameD.Size = new System.Drawing.Size(98, 17);
             this.lbNameD.TabIndex = 22;
-            this.lbNameD.Text = "Call Line Name";
+            this.lbNameD.Text = "Caller ID Name";
             // 
             // tbName
             // 
