@@ -131,7 +131,7 @@ namespace CallerID_Cloud_Relay.Classes
         {
             try
             {
-                ExecuteQuery("DELETE * FROM callLog;");
+                ExecuteQuery("DELETE FROM callLog;");
                 return true;
             }
             catch (Exception ex)

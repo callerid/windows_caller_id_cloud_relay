@@ -25,6 +25,9 @@ namespace CallerID_Cloud_Relay
         // Names of all Deluxe controls
         private List<string> deluxeNames = new List<string>();
 
+        // Duplicate handling
+        private List<string> previousReceptions = new List<string>();
+
         // Log Column Indexes
         const int logColLine = 0;
         const int logColIO = 1;
@@ -68,61 +71,77 @@ namespace CallerID_Cloud_Relay
 
         private void GetCall()
         {
-            var callParser = new CID_Parser.CallRecord(UdpReceiverClass.ReceivedMessage);
 
-            // Reset to correct time, CID_Parser does not always get correct time
-            Match matchDateTime = Regex.Match(UdpReceiverClass.ReceivedMessage, @".*(\d\d) ([IO]) ([ESB]) (\d{4}) ([GB]) (.)(\d) (\d\d/\d\d \d\d:\d\d [AP]M) (.{8,15})(.*)");
-            string callTime = "01/01 12:00 PM";
-            if (matchDateTime.Success)
+            string reception = UdpReceiverClass.ReceivedMessage;
+
+            // Duplicate handling ------------------------------------------------------
+            if (previousReceptions.Contains(reception))
             {
-                callTime = matchDateTime.Groups[8].Value.ToString();
+                return;
+            }
+            else
+            {
+                if (previousReceptions.Count > 30)
+                {
+                    // Reception buffer full- add to end and remove oldest reception
+                    previousReceptions.Add(reception);
+                    previousReceptions.RemoveAt(0);
+                }
+                else
+                {
+                    // Reception buffer not full- simply add
+                    previousReceptions.Add(reception);
+                }
             }
 
-            // Make sure UDP traffic is a CallerID.com call record
-            if (callParser.Line < 1) return;
+            // ------------------------------------------------------------------------
+                        
+            CallRecord cRecord = new CallRecord(UdpReceiverClass.ReceivedMessage);
+
+            if (!cRecord.IsValid) return;
 
             // ----------------------------------------------------
             //                   Add Call To Log
             // ----------------------------------------------------
-            string ln = callParser.Line.ToString();
+            string ln = cRecord.Line.ToString();
             if (ln.Length == 1) ln = "0" + ln;
-            string dur = callParser.Duration.ToString();
+            string dur = cRecord.Duration.ToString();
             while (dur.Length < 4)
             {
                 dur = "0" + dur;
             }
 
-            if (callParser.IsDetailed())
+            if (cRecord.Detailed)
             {
 
-                AddToLog(ln, callParser.CallTime.ToString(), "", "", callParser.DetailType, "", "", "", "");
+                AddToLog(ln, cRecord.DateTime.ToString(), "", "", cRecord.DetailedType, "", "", "", "");
             }
             else
             {
-                AddToLog(ln, callTime, callParser.Phone, callParser.Name, callParser.IOType, callParser.SEType, callParser.DetailType, dur, callParser.Ring);
+                AddToLog(ln, cRecord.DateTime.ToString(), cRecord.PhoneNumber, cRecord.Name, cRecord.InboundOrOutboundOrBlock, cRecord.StartOrEnd, cRecord.DetailedType, dur, cRecord.RingType.ToString() + cRecord.RingNumber.ToString());
             }
 
             // POST TO CLOUD
             string url = rbUseSuppliedUrl.Checked ? tbSuppliedURL.Text : tbGeneratedURL.Text;
             if (rbBasicUnit.Checked)
             {
-                if (callParser.IsStartRecord() && !callParser.IsDetailed())
+                if (cRecord.IsStartRecord() && !cRecord.Detailed)
                 {
-                    PostToUrl(url, ln, callTime, callParser.Phone, callParser.Name, callParser.IOType, callParser.SEType, callParser.DetailType, dur, (callParser.IsDetailed() ? "" : callParser.Ring));
+                    PostToUrl(url, ln,cRecord.DateTime.ToString(), cRecord.PhoneNumber, cRecord.Name, cRecord.InboundOrOutboundOrBlock, cRecord.StartOrEnd, cRecord.DetailedType, dur, (cRecord.Detailed ? "" : cRecord.RingType.ToString() + cRecord.RingNumber.ToString()));
                 }
             }
             else
             {
-                if (callParser.IsDetailed())
+                if (cRecord.Detailed)
                 {
                     if (!string.IsNullOrEmpty(tbStatus.Text))
                     {
-                        PostToUrl(url, ln, callParser.CallTime.ToString(), callParser.Phone, callParser.Name, callParser.IOType, callParser.SEType, callParser.DetailType, dur, (callParser.IsDetailed() ? "" : callParser.Ring));
+                        PostToUrl(url, ln, cRecord.DateTime.ToString(), cRecord.PhoneNumber, cRecord.Name, cRecord.InboundOrOutboundOrBlock, cRecord.StartOrEnd, cRecord.DetailedType, dur, (cRecord.Detailed ? "" : cRecord.RingType.ToString() + cRecord.RingNumber.ToString()));
                     }
                 }
                 else
                 {
-                    PostToUrl(url, ln, callTime, callParser.Phone, callParser.Name, callParser.IOType, callParser.SEType, callParser.DetailType, dur, (callParser.IsDetailed() ? "" : callParser.Ring));
+                    PostToUrl(url, ln, cRecord.DateTime.ToString(), cRecord.PhoneNumber, cRecord.Name, cRecord.InboundOrOutboundOrBlock, cRecord.StartOrEnd, cRecord.DetailedType, dur, (cRecord.Detailed ? "" : cRecord.RingType.ToString() + cRecord.RingNumber.ToString()));
                 }
             }
 
@@ -173,7 +192,7 @@ namespace CallerID_Cloud_Relay
 
             tbSuppliedURL.Text = Properties.Settings.Default.suppliedUrl;
 
-            if (!Properties.Settings.Default.builtUrl.Contains("http:") && !Properties.Settings.Default.builtUrl.Contains("www"))
+            if (!Properties.Settings.Default.builtUrl.Contains("http") && !Properties.Settings.Default.builtUrl.Contains("www"))
             {
                 tbGeneratedURL.Text = "[you must first generate your URL]";
                 tbGeneratedURL.ForeColor = Color.Maroon;
@@ -669,8 +688,17 @@ namespace CallerID_Cloud_Relay
             postData = postData.Replace("%RingType", ringType);
 
             var data = Encoding.ASCII.GetBytes(postData);
-
-            var request = (HttpWebRequest)WebRequest.Create(url + "?" + postData);
+            HttpWebRequest request = null;
+            try
+            {
+                request = (HttpWebRequest)WebRequest.Create(url + "?" + postData);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                Common.MsgBox("Invalid URL", Environment.NewLine + Environment.NewLine + "Url is not in valid format.", false, 4000);
+                return;
+            }
 
             request.Method = "POST";
             request.ContentType = "application/x-www-form-urlencoded";
@@ -681,17 +709,25 @@ namespace CallerID_Cloud_Relay
                 String encoded = System.Convert.ToBase64String(System.Text.Encoding.GetEncoding("ISO-8859-1").GetBytes(tbUsername.Text + ":" + tbPassword.Text));
                 request.Headers.Add("Authorization", "Basic " + encoded);
             }
-            
-            using (var stream = request.GetRequestStream())
+
+            try
             {
-                stream.Write(data, 0, data.Length);
+                using (var stream = request.GetRequestStream())
+                {
+                    stream.Write(data, 0, data.Length);
+                }
+
+                var response = (HttpWebResponse)request.GetResponse();
+
+                var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                Console.WriteLine(responseString);
             }
+            catch (Exception ex)
+            {
+                Common.MsgBox("URL Error", Environment.NewLine + "Error connecting to server." + Environment.NewLine + Environment.NewLine + ex.ToString(), false, 5000);
 
-            var response = (HttpWebResponse)request.GetResponse();
-
-            var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
-
-            Console.WriteLine(responseString);
+            }
+            
         }
 
         private void BtnTestSuppliedURL_Click(object sender, EventArgs e)
