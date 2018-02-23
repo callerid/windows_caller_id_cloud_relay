@@ -69,6 +69,29 @@ namespace CallerID_Cloud_Relay
 
         }
 
+        private void RemoveReceptionFromBuffer(string reception)
+        {
+            List<int> indexes = new List<int>();
+            int cnt = 0;
+            foreach (string rec in previousReceptions)
+            {
+                if (rec.Contains(reception.Substring(reception.Length - 20)))
+                {
+                    indexes.Add(cnt);
+                }
+
+                cnt++;
+
+            }
+
+            // IMPORTANT!! Remove in reverse order
+            for (int i = indexes.Count - 1; i >= 0; i--)
+            {
+                previousReceptions.RemoveAt(indexes[i]);
+            }
+
+        }
+
         private void GetCall()
         {
 
@@ -119,6 +142,11 @@ namespace CallerID_Cloud_Relay
             else
             {
                 AddToLog(ln, cRecord.DateTime.ToString(), cRecord.PhoneNumber, cRecord.Name, cRecord.InboundOrOutboundOrBlock, cRecord.StartOrEnd, cRecord.DetailedType, dur, cRecord.RingType.ToString() + cRecord.RingNumber.ToString());
+            }
+
+            if (cRecord.IsEndRecord())
+            {
+                RemoveReceptionFromBuffer(reception);
             }
 
             // POST TO CLOUD
