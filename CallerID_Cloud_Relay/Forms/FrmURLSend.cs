@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using CallerID_Cloud_Relay.Classes;
 using System.Net;
 using System.IO;
+using System.Globalization;
 
 namespace CallerID_Cloud_Relay
 {
@@ -151,11 +152,18 @@ namespace CallerID_Cloud_Relay
 
             // POST TO CLOUD
             string url = rbUseSuppliedUrl.Checked ? tbSuppliedURL.Text : tbGeneratedURL.Text;
+
+            int hour = int.Parse(cRecord.DateTime.Hour.ToString());
+            
+            if (hour > 12) hour = hour - 12;
+            string formattedTime = cRecord.DateTime.Month.ToString().PadLeft(2, '0') + "/" + cRecord.DateTime.Day.ToString().PadLeft(2, '0') + " " +
+                hour.ToString().PadLeft(2, '0') + ":" + cRecord.DateTime.Minute.ToString().PadLeft(2, '0') + " " + cRecord.DateTime.ToString("tt", CultureInfo.InvariantCulture);;
+            
             if (rbBasicUnit.Checked)
             {
                 if (cRecord.IsStartRecord() && !cRecord.Detailed)
                 {
-                    PostToUrl(url, ln,cRecord.DateTime.ToString(), cRecord.PhoneNumber, cRecord.Name, cRecord.InboundOrOutboundOrBlock, cRecord.StartOrEnd, cRecord.DetailedType, dur, (cRecord.Detailed ? "" : cRecord.RingType.ToString() + cRecord.RingNumber.ToString()));
+                    PostToUrl(url, ln, formattedTime, cRecord.PhoneNumber, cRecord.Name, cRecord.InboundOrOutboundOrBlock, cRecord.StartOrEnd, cRecord.DetailedType, dur, (cRecord.Detailed ? "" : cRecord.RingType.ToString() + cRecord.RingNumber.ToString()));
                 }
             }
             else
@@ -164,12 +172,12 @@ namespace CallerID_Cloud_Relay
                 {
                     if (!string.IsNullOrEmpty(tbStatus.Text))
                     {
-                        PostToUrl(url, ln, cRecord.DateTime.ToString(), cRecord.PhoneNumber, cRecord.Name, cRecord.InboundOrOutboundOrBlock, cRecord.StartOrEnd, cRecord.DetailedType, dur, (cRecord.Detailed ? "" : cRecord.RingType.ToString() + cRecord.RingNumber.ToString()));
+                        PostToUrl(url, ln, formattedTime, cRecord.PhoneNumber, cRecord.Name, cRecord.InboundOrOutboundOrBlock, cRecord.StartOrEnd, cRecord.DetailedType, dur, (cRecord.Detailed ? "" : cRecord.RingType.ToString() + cRecord.RingNumber.ToString()));
                     }
                 }
                 else
                 {
-                    PostToUrl(url, ln, cRecord.DateTime.ToString(), cRecord.PhoneNumber, cRecord.Name, cRecord.InboundOrOutboundOrBlock, cRecord.StartOrEnd, cRecord.DetailedType, dur, (cRecord.Detailed ? "" : cRecord.RingType.ToString() + cRecord.RingNumber.ToString()));
+                    PostToUrl(url, ln, formattedTime, cRecord.PhoneNumber, cRecord.Name, cRecord.InboundOrOutboundOrBlock, cRecord.StartOrEnd, cRecord.DetailedType, dur, (cRecord.Detailed ? "" : cRecord.RingType.ToString() + cRecord.RingNumber.ToString()));
                 }
             }
 
