@@ -26,8 +26,8 @@ namespace CallerID_Cloud_Relay
         // Names of all Deluxe controls
         private List<string> deluxeNames = new List<string>();
 
-        // Duplicate handling
-        private List<string> previousReceptions = new List<string>();
+        // Call Record reception <reception_string, seconds_since_it_came_in>
+        Dictionary<string, int> previousReceptions = new Dictionary<string, int>();
 
         // Log Column Indexes
         const int logColLine = 0;
@@ -70,59 +70,48 @@ namespace CallerID_Cloud_Relay
 
         }
 
-        private void RemoveReceptionFromBuffer(string reception)
-        {
-            List<int> indexes = new List<int>();
-            int cnt = 0;
-            foreach (string rec in previousReceptions)
-            {
-                if (rec.Contains(reception.Substring(reception.Length - 20)))
-                {
-                    indexes.Add(cnt);
-                }
-
-                cnt++;
-
-            }
-
-            // IMPORTANT!! Remove in reverse order
-            for (int i = indexes.Count - 1; i >= 0; i--)
-            {
-                previousReceptions.RemoveAt(indexes[i]);
-            }
-
-        }
-
         private void GetCall()
         {
 
             string reception = UdpReceiverClass.ReceivedMessage;
-
-            // Duplicate handling ------------------------------------------------------
-            if (previousReceptions.Contains(reception))
-            {
-                return;
-            }
-            else
-            {
-                if (previousReceptions.Count > 30)
-                {
-                    // Reception buffer full- add to end and remove oldest reception
-                    previousReceptions.Add(reception);
-                    previousReceptions.RemoveAt(0);
-                }
-                else
-                {
-                    // Reception buffer not full- simply add
-                    previousReceptions.Add(reception);
-                }
-            }
 
             // ------------------------------------------------------------------------
                         
             CallRecord cRecord = new CallRecord(UdpReceiverClass.ReceivedMessage);
 
             if (!cRecord.IsValid) return;
+
+            // DUPLICATES CODING START
+            if (previousReceptions.ContainsKey(reception))
+            {
+                if (previousReceptions[reception] < 60) return;
+            }
+            else
+            {
+
+                if (previousReceptions.Count > 30)
+                {
+                    previousReceptions.Add(reception, 0);
+
+                    string removeKey = "";
+                    foreach (string key in previousReceptions.Keys)
+                    {
+                        removeKey = key;
+                        break;
+                    }
+
+                    if (!string.IsNullOrEmpty(removeKey))
+                    {
+                        previousReceptions.Remove(removeKey);
+                    }
+
+                }
+                else
+                {
+                    previousReceptions.Add(reception, 0);
+                }
+            }
+            // DUPLICATES CODING END
 
             // ----------------------------------------------------
             //                   Add Call To Log
@@ -137,17 +126,11 @@ namespace CallerID_Cloud_Relay
 
             if (cRecord.Detailed)
             {
-
                 AddToLog(ln, cRecord.DateTime.ToString(), "", "", cRecord.DetailedType, "", "", "", "");
             }
             else
             {
                 AddToLog(ln, cRecord.DateTime.ToString(), cRecord.PhoneNumber, cRecord.Name, cRecord.InboundOrOutboundOrBlock, cRecord.StartOrEnd, cRecord.DetailedType, dur, cRecord.RingType.ToString() + cRecord.RingNumber.ToString());
-            }
-
-            if (cRecord.IsEndRecord())
-            {
-                RemoveReceptionFromBuffer(reception);
             }
 
             // POST TO CLOUD
@@ -156,8 +139,9 @@ namespace CallerID_Cloud_Relay
             int hour = int.Parse(cRecord.DateTime.Hour.ToString());
             
             if (hour > 12) hour = hour - 12;
+            if (hour == 0) hour = 12;
             string formattedTime = cRecord.DateTime.Month.ToString().PadLeft(2, '0') + "/" + cRecord.DateTime.Day.ToString().PadLeft(2, '0') + " " +
-                hour.ToString().PadLeft(2, '0') + ":" + cRecord.DateTime.Minute.ToString().PadLeft(2, '0') + " " + cRecord.DateTime.ToString("tt", CultureInfo.InvariantCulture);;
+                hour.ToString().PadLeft(2, '0') + ":" + cRecord.DateTime.Minute.ToString().PadLeft(2, '0') + " " + cRecord.DateTime.ToString("tt", CultureInfo.InvariantCulture);
             
             if (rbBasicUnit.Checked)
             {
@@ -170,6 +154,9 @@ namespace CallerID_Cloud_Relay
             {
                 if (cRecord.Detailed)
                 {
+                    formattedTime = cRecord.DateTime.Month.ToString().PadLeft(2, '0') + "/" + cRecord.DateTime.Day.ToString().PadLeft(2, '0') + " " +
+                    hour.ToString().PadLeft(2, '0') + ":" + cRecord.DateTime.Minute.ToString().PadLeft(2, '0') + ":" + cRecord.DateTime.Second.ToString().PadLeft(2, '0');
+                    
                     if (!string.IsNullOrEmpty(tbStatus.Text))
                     {
                         PostToUrl(url, ln, formattedTime, cRecord.PhoneNumber, cRecord.Name, cRecord.InboundOrOutboundOrBlock, cRecord.StartOrEnd, cRecord.DetailedType, dur, (cRecord.Detailed ? "" : cRecord.RingType.ToString() + cRecord.RingNumber.ToString()));
@@ -850,6 +837,51 @@ namespace CallerID_Cloud_Relay
             {
                 GotoBackground();
             }
+        }
+
+        private void timerDuplicateHandling_Tick(object sender, EventArgs e)
+        {
+            // DUPLICATES CODING START
+            // This timer is used to increment all seconds
+            // of the previous receptions and remove them 
+            // after 4 seconds have passed.
+
+            // If there is nothing in the reception buffer then simply exit function
+            if (previousReceptions.Count < 1) return;
+
+            // Create needed lists
+            List<string> keysToRemove = new List<string>();
+            List<string> keysToIncrement = new List<string>();
+
+            // Loop through previously received call records
+            // and mark the ones which need to be removed and
+            // mark the ones to increment the seconds on
+            foreach (string key in previousReceptions.Keys)
+            {
+                if (previousReceptions[key] > 4) // remove after 4 seconds
+                {
+                    // This reception will be removed
+                    keysToRemove.Add(key);
+                }
+                else
+                {
+                    // This reception has no waited another second
+                    keysToIncrement.Add(key);
+                }
+            }
+
+            // Increment the second of all needed receptions in buffer
+            foreach (string key in keysToIncrement)
+            {
+                previousReceptions[key]++;
+            }
+
+            // Remove all receptions in buffer that are past the time limit (2 seconds)
+            foreach (string key in keysToRemove)
+            {
+                previousReceptions.Remove(key);
+            }
+            // DUPLICATES CODING END
         }
         
     }

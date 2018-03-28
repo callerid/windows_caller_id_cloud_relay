@@ -105,6 +105,7 @@
             this.timerHideGenerateSuccess = new System.Windows.Forms.Timer(this.components);
             this.sysTray = new System.Windows.Forms.NotifyIcon(this.components);
             this.timerSySTrayHide = new System.Windows.Forms.Timer(this.components);
+            this.timerDuplicateHandling = new System.Windows.Forms.Timer(this.components);
             this.gbAuthenication.SuspendLayout();
             this.gbSuppliedUrl.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -933,6 +934,12 @@
             this.timerSySTrayHide.Enabled = true;
             this.timerSySTrayHide.Tick += new System.EventHandler(this.TimerSySTrayHide_Tick);
             // 
+            // timerDuplicateHandling
+            // 
+            this.timerDuplicateHandling.Enabled = true;
+            this.timerDuplicateHandling.Interval = 1000;
+            this.timerDuplicateHandling.Tick += new System.EventHandler(this.timerDuplicateHandling_Tick);
+            // 
             // FrmURLSend
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1048,6 +1055,7 @@
         private System.Windows.Forms.NotifyIcon sysTray;
         private System.Windows.Forms.CheckBox ckbHideInSystemTray;
         private System.Windows.Forms.Timer timerSySTrayHide;
+        private System.Windows.Forms.Timer timerDuplicateHandling;
     }
 }
 
