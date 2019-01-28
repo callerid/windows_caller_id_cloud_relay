@@ -93,6 +93,11 @@
             this.gbLog = new System.Windows.Forms.GroupBox();
             this.btnClearLog = new System.Windows.Forms.Button();
             this.dgvLog = new System.Windows.Forms.DataGridView();
+            this.timerShowBoundPort = new System.Windows.Forms.Timer(this.components);
+            this.timerHideGenerateSuccess = new System.Windows.Forms.Timer(this.components);
+            this.sysTray = new System.Windows.Forms.NotifyIcon(this.components);
+            this.timerSySTrayHide = new System.Windows.Forms.Timer(this.components);
+            this.timerDuplicateHandling = new System.Windows.Forms.Timer(this.components);
             this.colLine = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colInOut = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colStartEnd = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -101,11 +106,9 @@
             this.colDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colNumber = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.timerShowBoundPort = new System.Windows.Forms.Timer(this.components);
-            this.timerHideGenerateSuccess = new System.Windows.Forms.Timer(this.components);
-            this.sysTray = new System.Windows.Forms.NotifyIcon(this.components);
-            this.timerSySTrayHide = new System.Windows.Forms.Timer(this.components);
-            this.timerDuplicateHandling = new System.Windows.Forms.Timer(this.components);
+            this.dgvLogSuccess = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.dgvLogID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvLogColText = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gbAuthenication.SuspendLayout();
             this.gbSuppliedUrl.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -232,7 +235,7 @@
             this.label1.Size = new System.Drawing.Size(519, 13);
             this.label1.TabIndex = 6;
             this.label1.Text = "Example: http://www.cloudserver.com/upload.php?line=%Line&&number=%Phone&&calleri" +
-                "d=%Name";
+    "d=%Name";
             // 
             // tbSuppliedURL
             // 
@@ -374,7 +377,7 @@
             this.gbDevSection.TabIndex = 7;
             this.gbDevSection.TabStop = false;
             this.gbDevSection.Text = "Developers Section - Build the relay URL by entering the Cloud Server address and" +
-                " mapping data fields";
+    " mapping data fields";
             // 
             // lbSuccessfulGen
             // 
@@ -843,7 +846,10 @@
             this.colRing,
             this.colDate,
             this.colNumber,
-            this.colName});
+            this.colName,
+            this.dgvLogSuccess,
+            this.dgvLogID,
+            this.dgvLogColText});
             this.dgvLog.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvLog.Location = new System.Drawing.Point(3, 21);
             this.dgvLog.Name = "dgvLog";
@@ -852,62 +858,7 @@
             this.dgvLog.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Segoe UI", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dgvLog.Size = new System.Drawing.Size(691, 103);
             this.dgvLog.TabIndex = 0;
-            // 
-            // colLine
-            // 
-            this.colLine.HeaderText = "Ln";
-            this.colLine.Name = "colLine";
-            this.colLine.ReadOnly = true;
-            this.colLine.Width = 40;
-            // 
-            // colInOut
-            // 
-            this.colInOut.HeaderText = "I/O";
-            this.colInOut.Name = "colInOut";
-            this.colInOut.ReadOnly = true;
-            this.colInOut.Width = 40;
-            // 
-            // colStartEnd
-            // 
-            this.colStartEnd.HeaderText = "S/E";
-            this.colStartEnd.Name = "colStartEnd";
-            this.colStartEnd.ReadOnly = true;
-            this.colStartEnd.Width = 40;
-            // 
-            // colDur
-            // 
-            this.colDur.HeaderText = "Dur";
-            this.colDur.Name = "colDur";
-            this.colDur.ReadOnly = true;
-            this.colDur.Width = 60;
-            // 
-            // colRing
-            // 
-            this.colRing.HeaderText = "Ring";
-            this.colRing.Name = "colRing";
-            this.colRing.ReadOnly = true;
-            this.colRing.Width = 50;
-            // 
-            // colDate
-            // 
-            this.colDate.HeaderText = "Date & Time";
-            this.colDate.Name = "colDate";
-            this.colDate.ReadOnly = true;
-            this.colDate.Width = 150;
-            // 
-            // colNumber
-            // 
-            this.colNumber.HeaderText = "Number";
-            this.colNumber.Name = "colNumber";
-            this.colNumber.ReadOnly = true;
-            this.colNumber.Width = 125;
-            // 
-            // colName
-            // 
-            this.colName.HeaderText = "Name";
-            this.colName.Name = "colName";
-            this.colName.ReadOnly = true;
-            this.colName.Width = 125;
+            this.dgvLog.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvLog_CellContentClick);
             // 
             // timerShowBoundPort
             // 
@@ -939,6 +890,93 @@
             this.timerDuplicateHandling.Enabled = true;
             this.timerDuplicateHandling.Interval = 1000;
             this.timerDuplicateHandling.Tick += new System.EventHandler(this.timerDuplicateHandling_Tick);
+            // 
+            // colLine
+            // 
+            this.colLine.Frozen = true;
+            this.colLine.HeaderText = "Ln";
+            this.colLine.Name = "colLine";
+            this.colLine.ReadOnly = true;
+            this.colLine.Width = 40;
+            // 
+            // colInOut
+            // 
+            this.colInOut.Frozen = true;
+            this.colInOut.HeaderText = "I/O";
+            this.colInOut.Name = "colInOut";
+            this.colInOut.ReadOnly = true;
+            this.colInOut.Width = 40;
+            // 
+            // colStartEnd
+            // 
+            this.colStartEnd.Frozen = true;
+            this.colStartEnd.HeaderText = "S/E";
+            this.colStartEnd.Name = "colStartEnd";
+            this.colStartEnd.ReadOnly = true;
+            this.colStartEnd.Width = 40;
+            // 
+            // colDur
+            // 
+            this.colDur.Frozen = true;
+            this.colDur.HeaderText = "Dur";
+            this.colDur.Name = "colDur";
+            this.colDur.ReadOnly = true;
+            this.colDur.Width = 60;
+            // 
+            // colRing
+            // 
+            this.colRing.Frozen = true;
+            this.colRing.HeaderText = "Ring";
+            this.colRing.Name = "colRing";
+            this.colRing.ReadOnly = true;
+            this.colRing.Width = 50;
+            // 
+            // colDate
+            // 
+            this.colDate.Frozen = true;
+            this.colDate.HeaderText = "Date & Time";
+            this.colDate.Name = "colDate";
+            this.colDate.ReadOnly = true;
+            this.colDate.Width = 150;
+            // 
+            // colNumber
+            // 
+            this.colNumber.Frozen = true;
+            this.colNumber.HeaderText = "Number";
+            this.colNumber.Name = "colNumber";
+            this.colNumber.ReadOnly = true;
+            this.colNumber.Width = 125;
+            // 
+            // colName
+            // 
+            this.colName.Frozen = true;
+            this.colName.HeaderText = "Name";
+            this.colName.Name = "colName";
+            this.colName.ReadOnly = true;
+            this.colName.Width = 125;
+            // 
+            // dgvLogSuccess
+            // 
+            this.dgvLogSuccess.HeaderText = "L";
+            this.dgvLogSuccess.Name = "dgvLogSuccess";
+            this.dgvLogSuccess.ReadOnly = true;
+            this.dgvLogSuccess.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvLogSuccess.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.dgvLogSuccess.Width = 25;
+            // 
+            // dgvLogID
+            // 
+            this.dgvLogID.HeaderText = "ID";
+            this.dgvLogID.Name = "dgvLogID";
+            this.dgvLogID.ReadOnly = true;
+            this.dgvLogID.Visible = false;
+            // 
+            // dgvLogColText
+            // 
+            this.dgvLogColText.HeaderText = "Text";
+            this.dgvLogColText.Name = "dgvLogColText";
+            this.dgvLogColText.ReadOnly = true;
+            this.dgvLogColText.Visible = false;
             // 
             // FrmURLSend
             // 
@@ -1040,14 +1078,6 @@
         private System.Windows.Forms.Button btnPaste;
         private System.Windows.Forms.Button btnGenerateURL;
         private System.Windows.Forms.Button btnCopyBuiltURL;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colLine;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colInOut;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colStartEnd;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colDur;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colRing;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colDate;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colNumber;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colName;
         private System.Windows.Forms.Timer timerShowBoundPort;
         private System.Windows.Forms.Label lbSuccessfulGen;
         private System.Windows.Forms.Timer timerHideGenerateSuccess;
@@ -1056,6 +1086,17 @@
         private System.Windows.Forms.CheckBox ckbHideInSystemTray;
         private System.Windows.Forms.Timer timerSySTrayHide;
         private System.Windows.Forms.Timer timerDuplicateHandling;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colLine;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colInOut;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colStartEnd;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colDur;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colRing;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colDate;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colNumber;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colName;
+        private System.Windows.Forms.DataGridViewButtonColumn dgvLogSuccess;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvLogID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dgvLogColText;
     }
 }
 

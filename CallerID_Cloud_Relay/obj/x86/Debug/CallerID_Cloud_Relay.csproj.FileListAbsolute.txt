@@ -5,7 +5,6 @@ F:\Projects\Visual Studio Projects\CallerID_Cloud_Relay\CallerID_Cloud_Relay\obj
 F:\Projects\Visual Studio Projects\CallerID_Cloud_Relay\CallerID_Cloud_Relay\obj\x86\Debug\CallerID_Cloud_Relay.csproj.GenerateResource.Cache
 F:\Projects\Visual Studio Projects\CallerID_Cloud_Relay\CallerID_Cloud_Relay\obj\x86\Debug\CallerID_Cloud_Relay.exe
 F:\Projects\Visual Studio Projects\CallerID_Cloud_Relay\CallerID_Cloud_Relay\obj\x86\Debug\CallerID_Cloud_Relay.pdb
-F:\Projects\Visual Studio Projects\CallerID_Cloud_Relay\CallerID_Cloud_Relay\obj\x86\Debug\CallerID_Cloud_Relay.csprojResolveAssemblyReference.cache
 F:\Projects\Visual Studio Projects\CallerID_Cloud_Relay\CallerID_Cloud_Relay\bin\Debug\CID_Parser.dll
 F:\Projects\Visual Studio Projects\CallerID_Cloud_Relay\CallerID_Cloud_Relay\bin\Debug\System.Data.SQLite.DLL
 F:\Projects\Visual Studio Projects\CallerID_Cloud_Relay\CallerID_Cloud_Relay\bin\Debug\CallerID_Cloud_Relay.exe.config
@@ -22,3 +21,9 @@ C:\Users\spenl\Desktop\CallerID_Cloud_Relay\CallerID_Cloud_Relay\obj\x86\Debug\C
 C:\Users\spenl\Desktop\CallerID_Cloud_Relay\CallerID_Cloud_Relay\obj\x86\Debug\CallerID_Cloud_Relay.FrmURLSend.resources
 C:\Users\spenl\Desktop\CallerID_Cloud_Relay\CallerID_Cloud_Relay\obj\x86\Debug\CallerID_Cloud_Relay.Properties.Resources.resources
 C:\Users\spenl\Desktop\CallerID_Cloud_Relay\CallerID_Cloud_Relay\obj\x86\Debug\CallerID_Cloud_Relay.csproj.GenerateResource.Cache
+C:\Local VS Builds\CallerID_Cloud_Relay\CallerID_Cloud_Relay.exe.config
+C:\Local VS Builds\CallerID_Cloud_Relay\CallerID_Cloud_Relay.exe
+C:\Local VS Builds\CallerID_Cloud_Relay\CallerID_Cloud_Relay.pdb
+F:\Projects\Visual Studio Projects\CallerID_Cloud_Relay\CallerID_Cloud_Relay\obj\x86\Debug\CallerID_Cloud_Relay.csprojAssemblyReference.cache
+F:\Projects\Visual Studio Projects\CallerID_Cloud_Relay\CallerID_Cloud_Relay\obj\x86\Debug\CallerID_Cloud_Relay.csproj.CoreCompileInputs.cache
+F:\Projects\Visual Studio Projects\CallerID_Cloud_Relay\CallerID_Cloud_Relay\obj\x86\Debug\CallerID_Cloud_Relay.csproj.CopyComplete
