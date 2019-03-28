@@ -42,6 +42,8 @@ namespace CallerID_Cloud_Relay
         const int logColLogID = 9;
         const int logColText = 10;
 
+        public bool Kill;
+
         // Patterns for parsing pasted URL
         string linePattern = "([&]?([A-Za-z0-9_-]+)=%Line)";
         string ioPattern = "([&]?([A-Za-z0-9_-]+)=%IO)";
@@ -191,10 +193,26 @@ namespace CallerID_Cloud_Relay
             }
         }
         
+        private void CloseProgramFromSysTray(object sender, EventArgs e)
+        {
+            sysTray.Visible = false;
+            Kill = true;
+            Close();
+            Application.Exit();
+            return;
+        }
+
         public FrmURLSend()
         {
             InitializeComponent();
-            
+
+            ContextMenu sysTrayMenu = new ContextMenu();
+            MenuItem itemClose = new MenuItem();
+            itemClose.Text = "Exit Cloud Relay";
+            itemClose.Click += CloseProgramFromSysTray;
+            sysTrayMenu.MenuItems.Add(itemClose);
+            sysTray.ContextMenu = sysTrayMenu;
+
             // Database Functions
             callLog = new CID_Database();
             LoadLog();
@@ -283,6 +301,12 @@ namespace CallerID_Cloud_Relay
 
             Properties.Settings.Default.Save();
 
+            if (ckbHideInSystemTray.Checked && !Kill)
+            {
+                GotoBackground();
+                e.Cancel = true;
+            }
+
         }
 
         private void FrmURLSend_FormClosed(object sender, FormClosedEventArgs e)
@@ -321,10 +345,14 @@ namespace CallerID_Cloud_Relay
             if (rbUseSuppliedUrl.Checked)
             {
                 btnTestSuppliedURL.Text = "Test Supplied URL";
+                rbBasicUnit.Enabled = false;
+                rbDeluxeUnit.Enabled = false;
             }
             else
             {
                 btnTestSuppliedURL.Text = "Test Built URL";
+                rbBasicUnit.Enabled = true;
+                rbDeluxeUnit.Enabled = true;
             }
         }
 
@@ -740,6 +768,8 @@ namespace CallerID_Cloud_Relay
                 request.Headers.Add("Authorization", "Basic " + encoded);
             }
 
+            string response_string = "";
+            HttpWebResponse response = null;
             try
             {
                 using (var stream = request.GetRequestStream())
@@ -747,11 +777,13 @@ namespace CallerID_Cloud_Relay
                     stream.Write(data, 0, data.Length);
                 }
 
-                var response = (HttpWebResponse)request.GetResponse();
+                response = (HttpWebResponse)request.GetResponse();
 
-                var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
-                Console.WriteLine(responseString);
-                UpdateDGVWithLogID(log_id, responseString);
+                response_string = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                Console.WriteLine(response_string);
+                UpdateDGVWithLogID(log_id, response_string);
+
+                response.Close();
 
             }
             catch (Exception ex)
@@ -759,6 +791,7 @@ namespace CallerID_Cloud_Relay
                 Common.MsgBox("URL Error", Environment.NewLine + "Error connecting to server." + Environment.NewLine + Environment.NewLine + ex.ToString(), false, 5000);
 
             }
+
             
         }
 
@@ -860,10 +893,8 @@ namespace CallerID_Cloud_Relay
 
         private void CkbHideInSystemTray_CheckedChanged(object sender, EventArgs e)
         {
-            if (ckbHideInSystemTray.Checked)
-            {
-                GotoBackground();
-            }
+            Properties.Settings.Default.hideInSystemTray = ckbHideInSystemTray.Checked;
+            Properties.Settings.Default.Save();
         }
 
         private void timerDuplicateHandling_Tick(object sender, EventArgs e)

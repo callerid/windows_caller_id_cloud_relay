@@ -93,11 +93,6 @@
             this.gbLog = new System.Windows.Forms.GroupBox();
             this.btnClearLog = new System.Windows.Forms.Button();
             this.dgvLog = new System.Windows.Forms.DataGridView();
-            this.timerShowBoundPort = new System.Windows.Forms.Timer(this.components);
-            this.timerHideGenerateSuccess = new System.Windows.Forms.Timer(this.components);
-            this.sysTray = new System.Windows.Forms.NotifyIcon(this.components);
-            this.timerSySTrayHide = new System.Windows.Forms.Timer(this.components);
-            this.timerDuplicateHandling = new System.Windows.Forms.Timer(this.components);
             this.colLine = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colInOut = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colStartEnd = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -109,6 +104,11 @@
             this.dgvLogSuccess = new System.Windows.Forms.DataGridViewButtonColumn();
             this.dgvLogID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvLogColText = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.timerShowBoundPort = new System.Windows.Forms.Timer(this.components);
+            this.timerHideGenerateSuccess = new System.Windows.Forms.Timer(this.components);
+            this.sysTray = new System.Windows.Forms.NotifyIcon(this.components);
+            this.timerSySTrayHide = new System.Windows.Forms.Timer(this.components);
+            this.timerDuplicateHandling = new System.Windows.Forms.Timer(this.components);
             this.gbAuthenication.SuspendLayout();
             this.gbSuppliedUrl.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -137,11 +137,11 @@
             // ckbHideInSystemTray
             // 
             this.ckbHideInSystemTray.AutoSize = true;
-            this.ckbHideInSystemTray.Location = new System.Drawing.Point(409, 0);
+            this.ckbHideInSystemTray.Location = new System.Drawing.Point(459, 0);
             this.ckbHideInSystemTray.Name = "ckbHideInSystemTray";
-            this.ckbHideInSystemTray.Size = new System.Drawing.Size(291, 21);
+            this.ckbHideInSystemTray.Size = new System.Drawing.Size(222, 21);
             this.ckbHideInSystemTray.TabIndex = 10;
-            this.ckbHideInSystemTray.Text = "Cloud Relay Will Load Up into System Tray";
+            this.ckbHideInSystemTray.Text = "Run Cloud Relay in System Tray";
             this.ckbHideInSystemTray.UseVisualStyleBackColor = true;
             this.ckbHideInSystemTray.CheckedChanged += new System.EventHandler(this.CkbHideInSystemTray_CheckedChanged);
             // 
@@ -860,37 +860,6 @@
             this.dgvLog.TabIndex = 0;
             this.dgvLog.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvLog_CellContentClick);
             // 
-            // timerShowBoundPort
-            // 
-            this.timerShowBoundPort.Enabled = true;
-            this.timerShowBoundPort.Interval = 1000;
-            this.timerShowBoundPort.Tick += new System.EventHandler(this.TimerShowBoundPort_Tick);
-            // 
-            // timerHideGenerateSuccess
-            // 
-            this.timerHideGenerateSuccess.Interval = 3000;
-            this.timerHideGenerateSuccess.Tick += new System.EventHandler(this.TimerHideGenerateSuccess_Tick);
-            // 
-            // sysTray
-            // 
-            this.sysTray.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.sysTray.BalloonTipText = "Cloud Relay running in background.";
-            this.sysTray.BalloonTipTitle = "Caller ID Cloud Relay";
-            this.sysTray.Icon = ((System.Drawing.Icon)(resources.GetObject("sysTray.Icon")));
-            this.sysTray.Text = "Caller ID Cloud Relay";
-            this.sysTray.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.BringToForeground);
-            // 
-            // timerSySTrayHide
-            // 
-            this.timerSySTrayHide.Enabled = true;
-            this.timerSySTrayHide.Tick += new System.EventHandler(this.TimerSySTrayHide_Tick);
-            // 
-            // timerDuplicateHandling
-            // 
-            this.timerDuplicateHandling.Enabled = true;
-            this.timerDuplicateHandling.Interval = 1000;
-            this.timerDuplicateHandling.Tick += new System.EventHandler(this.timerDuplicateHandling_Tick);
-            // 
             // colLine
             // 
             this.colLine.Frozen = true;
@@ -977,6 +946,37 @@
             this.dgvLogColText.Name = "dgvLogColText";
             this.dgvLogColText.ReadOnly = true;
             this.dgvLogColText.Visible = false;
+            // 
+            // timerShowBoundPort
+            // 
+            this.timerShowBoundPort.Enabled = true;
+            this.timerShowBoundPort.Interval = 1000;
+            this.timerShowBoundPort.Tick += new System.EventHandler(this.TimerShowBoundPort_Tick);
+            // 
+            // timerHideGenerateSuccess
+            // 
+            this.timerHideGenerateSuccess.Interval = 3000;
+            this.timerHideGenerateSuccess.Tick += new System.EventHandler(this.TimerHideGenerateSuccess_Tick);
+            // 
+            // sysTray
+            // 
+            this.sysTray.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.sysTray.BalloonTipText = "Cloud Relay running in background.";
+            this.sysTray.BalloonTipTitle = "Caller ID Cloud Relay";
+            this.sysTray.Icon = ((System.Drawing.Icon)(resources.GetObject("sysTray.Icon")));
+            this.sysTray.Text = "Caller ID Cloud Relay";
+            this.sysTray.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.BringToForeground);
+            // 
+            // timerSySTrayHide
+            // 
+            this.timerSySTrayHide.Enabled = true;
+            this.timerSySTrayHide.Tick += new System.EventHandler(this.TimerSySTrayHide_Tick);
+            // 
+            // timerDuplicateHandling
+            // 
+            this.timerDuplicateHandling.Enabled = true;
+            this.timerDuplicateHandling.Interval = 1000;
+            this.timerDuplicateHandling.Tick += new System.EventHandler(this.timerDuplicateHandling_Tick);
             // 
             // FrmURLSend
             // 
