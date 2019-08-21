@@ -28,7 +28,7 @@ namespace CallerID_Cloud_Relay
 
         // Call Record reception <reception_string, seconds_since_it_came_in>
         Dictionary<string, int> previousReceptions = new Dictionary<string, int>();
-
+        
         // Log Column Indexes
         const int logColLine = 0;
         const int logColIO = 1;
@@ -71,7 +71,21 @@ namespace CallerID_Cloud_Relay
         {
             // HELP : example how to call method
             // Invoke((MethodInvoker)(() => methodName()));
-            Invoke((MethodInvoker)(GetCall));
+            if(InvokeRequired)
+            {
+                Invoke((MethodInvoker)(GetCall));
+            }
+            else
+            {
+
+                string reception = UdpReceiverClass.ReceivedMessage;
+                CallRecord cRecord = new CallRecord(UdpReceiverClass.ReceivedMessage);
+
+                string log_id = GetNewLogID(cRecord);
+                AddToCallLog(cRecord, log_id, false);
+                PostCallToCloud(cRecord, log_id);
+
+            }
 
         }
 
@@ -85,11 +99,95 @@ namespace CallerID_Cloud_Relay
             CallRecord cRecord = new CallRecord(UdpReceiverClass.ReceivedMessage);
 
             if (!cRecord.IsValid) return;
+            if (IsDuplicate(cRecord)) return;
 
-            // DUPLICATES CODING START
+            string log_id = GetNewLogID(cRecord);
+
+            // Add to log
+            AddToCallLog(cRecord, log_id);
+
+            // POST TO CLOUD
+            PostCallToCloud(cRecord, log_id);
+
+        }
+
+        private void PostCallToCloud(CallRecord cRecord, string log_id)
+        {
+            string ln = cRecord.Line.ToString();
+            if (ln.Length == 1) ln = "0" + ln;
+            string dur = cRecord.Duration.ToString();
+            while (dur.Length < 4)
+            {
+                dur = "0" + dur;
+            }
+
+            string url = rbUseSuppliedUrl.Checked ? tbSuppliedURL.Text : tbGeneratedURL.Text;
+
+            int hour = int.Parse(cRecord.DateTime.Hour.ToString());
+
+            if (hour > 12) hour = hour - 12;
+            if (hour == 0) hour = 12;
+            string formattedTime = cRecord.DateTime.Month.ToString().PadLeft(2, '0') + "/" + cRecord.DateTime.Day.ToString().PadLeft(2, '0') + " " +
+                hour.ToString().PadLeft(2, '0') + ":" + cRecord.DateTime.Minute.ToString().PadLeft(2, '0') + " " + cRecord.DateTime.ToString("tt", CultureInfo.InvariantCulture);
+
+            if (rbBasicUnit.Checked)
+            {
+                if (cRecord.IsStartRecord() && !cRecord.Detailed)
+                {
+                    PostToUrl(url, ln, formattedTime, cRecord.PhoneNumber, cRecord.Name, cRecord.InboundOrOutboundOrBlock, cRecord.StartOrEnd, cRecord.DetailedType, dur, (cRecord.Detailed ? "" : cRecord.RingType.ToString() + cRecord.RingNumber.ToString()), log_id);
+                }
+            }
+            else
+            {
+                if (cRecord.Detailed)
+                {
+                    formattedTime = cRecord.DateTime.Month.ToString().PadLeft(2, '0') + "/" + cRecord.DateTime.Day.ToString().PadLeft(2, '0') + " " +
+                    hour.ToString().PadLeft(2, '0') + ":" + cRecord.DateTime.Minute.ToString().PadLeft(2, '0') + ":" + cRecord.DateTime.Second.ToString().PadLeft(2, '0');
+
+                    if (!string.IsNullOrEmpty(tbStatus.Text))
+                    {
+                        PostToUrl(url, ln, formattedTime, cRecord.PhoneNumber, cRecord.Name, cRecord.InboundOrOutboundOrBlock, cRecord.StartOrEnd, cRecord.DetailedType, dur, (cRecord.Detailed ? "" : cRecord.RingType.ToString() + cRecord.RingNumber.ToString()), log_id);
+                    }
+                }
+                else
+                {
+                    PostToUrl(url, ln, formattedTime, cRecord.PhoneNumber, cRecord.Name, cRecord.InboundOrOutboundOrBlock, cRecord.StartOrEnd, cRecord.DetailedType, dur, (cRecord.Detailed ? "" : cRecord.RingType.ToString() + cRecord.RingNumber.ToString()), log_id);
+                }
+            }
+        }
+        
+        private string GetNewLogID(CallRecord cRecord)
+        {
+            return "i" + cRecord.Line + cRecord.PhoneNumber + DateTime.Now.Second;
+        }
+
+        private void AddToCallLog(CallRecord cRecord, string log_id, bool show = true)
+        {
+            string ln = cRecord.Line.ToString();
+            if (ln.Length == 1) ln = "0" + ln;
+            string dur = cRecord.Duration.ToString();
+            while (dur.Length < 4)
+            {
+                dur = "0" + dur;
+            }
+
+            if (cRecord.Detailed)
+            {
+                AddToLog(ln, cRecord.DateTime.ToString(), "", "", cRecord.DetailedType, "", "", "", "", true, log_id, show);
+            }
+            else
+            {
+                AddToLog(ln, cRecord.DateTime.ToString(), cRecord.PhoneNumber, cRecord.Name, cRecord.InboundOrOutboundOrBlock, cRecord.StartOrEnd, cRecord.DetailedType, dur, cRecord.RingType.ToString() + cRecord.RingNumber.ToString(), true, log_id, show);
+            }
+        }
+
+        private bool IsDuplicate(CallRecord cRecord)
+        {
+            string reception = cRecord.Reception;
+
             if (previousReceptions.ContainsKey(reception))
             {
-                if (previousReceptions[reception] < 60) return;
+                if (previousReceptions[reception] < 60) return true;
             }
             else
             {
@@ -116,65 +214,8 @@ namespace CallerID_Cloud_Relay
                     previousReceptions.Add(reception, 0);
                 }
             }
-            // DUPLICATES CODING END
 
-            // ----------------------------------------------------
-            //                   Add Call To Log
-            // ----------------------------------------------------
-            string ln = cRecord.Line.ToString();
-            if (ln.Length == 1) ln = "0" + ln;
-            string dur = cRecord.Duration.ToString();
-            while (dur.Length < 4)
-            {
-                dur = "0" + dur;
-            }
-
-            string log_id = "i" + cRecord.Line + cRecord.PhoneNumber + DateTime.Now.Second;
-
-            if (cRecord.Detailed)
-            {
-                AddToLog(ln, cRecord.DateTime.ToString(), "", "", cRecord.DetailedType, "", "", "", "", true, log_id);
-            }
-            else
-            {
-                AddToLog(ln, cRecord.DateTime.ToString(), cRecord.PhoneNumber, cRecord.Name, cRecord.InboundOrOutboundOrBlock, cRecord.StartOrEnd, cRecord.DetailedType, dur, cRecord.RingType.ToString() + cRecord.RingNumber.ToString(), true, log_id);
-            }
-
-            // POST TO CLOUD
-            string url = rbUseSuppliedUrl.Checked ? tbSuppliedURL.Text : tbGeneratedURL.Text;
-
-            int hour = int.Parse(cRecord.DateTime.Hour.ToString());
-            
-            if (hour > 12) hour = hour - 12;
-            if (hour == 0) hour = 12;
-            string formattedTime = cRecord.DateTime.Month.ToString().PadLeft(2, '0') + "/" + cRecord.DateTime.Day.ToString().PadLeft(2, '0') + " " +
-                hour.ToString().PadLeft(2, '0') + ":" + cRecord.DateTime.Minute.ToString().PadLeft(2, '0') + " " + cRecord.DateTime.ToString("tt", CultureInfo.InvariantCulture);
-            
-            if (rbBasicUnit.Checked)
-            {
-                if (cRecord.IsStartRecord() && !cRecord.Detailed)
-                {
-                    PostToUrl(url, ln, formattedTime, cRecord.PhoneNumber, cRecord.Name, cRecord.InboundOrOutboundOrBlock, cRecord.StartOrEnd, cRecord.DetailedType, dur, (cRecord.Detailed ? "" : cRecord.RingType.ToString() + cRecord.RingNumber.ToString()), log_id);
-                }
-            }
-            else
-            {
-                if (cRecord.Detailed)
-                {
-                    formattedTime = cRecord.DateTime.Month.ToString().PadLeft(2, '0') + "/" + cRecord.DateTime.Day.ToString().PadLeft(2, '0') + " " +
-                    hour.ToString().PadLeft(2, '0') + ":" + cRecord.DateTime.Minute.ToString().PadLeft(2, '0') + ":" + cRecord.DateTime.Second.ToString().PadLeft(2, '0');
-                    
-                    if (!string.IsNullOrEmpty(tbStatus.Text))
-                    {
-                        PostToUrl(url, ln, formattedTime, cRecord.PhoneNumber, cRecord.Name, cRecord.InboundOrOutboundOrBlock, cRecord.StartOrEnd, cRecord.DetailedType, dur, (cRecord.Detailed ? "" : cRecord.RingType.ToString() + cRecord.RingNumber.ToString()), log_id);
-                    }
-                }
-                else
-                {
-                    PostToUrl(url, ln, formattedTime, cRecord.PhoneNumber, cRecord.Name, cRecord.InboundOrOutboundOrBlock, cRecord.StartOrEnd, cRecord.DetailedType, dur, (cRecord.Detailed ? "" : cRecord.RingType.ToString() + cRecord.RingNumber.ToString()), log_id);
-                }
-            }
-
+            return false;
         }
 
         //------------------------------------------------------------------------------------Form Functions
@@ -521,27 +562,31 @@ namespace CallerID_Cloud_Relay
         //-------------------------------------------------------------------------------------Log Functions
         
         private void AddToLog(string line,string dateTime, string number, string name, string io, 
-            string se, string status, string duration, string ring, bool addToSQL = true, string log_id = "")
+            string se, string status, string duration, string ring, bool addToSQL = true, string log_id = "", bool show = true)
         {
-            dgvLog.Rows.Add();
+            if (show)
+            {
+                dgvLog.Rows.Add();
 
-            // Insert all values
-            dgvLog.Rows[dgvLog.Rows.Count - 1].Cells[logColLine].Value = line;
-            dgvLog.Rows[dgvLog.Rows.Count - 1].Cells[logColIO].Value = io;
-            dgvLog.Rows[dgvLog.Rows.Count - 1].Cells[logColSE].Value = se;
-            dgvLog.Rows[dgvLog.Rows.Count - 1].Cells[logColDur].Value = duration;
-            dgvLog.Rows[dgvLog.Rows.Count - 1].Cells[logColRing].Value = ring;
-            dgvLog.Rows[dgvLog.Rows.Count - 1].Cells[logColDateTime].Value = dateTime;
-            dgvLog.Rows[dgvLog.Rows.Count - 1].Cells[logColNumber].Value = number;
-            dgvLog.Rows[dgvLog.Rows.Count - 1].Cells[logColS].Value = "L";
-            dgvLog.Rows[dgvLog.Rows.Count - 1].Cells[logColLogID].Value = log_id;
-            dgvLog.Rows[dgvLog.Rows.Count - 1].Cells[logColText].Value = "";
+                // Insert all values
+                dgvLog.Rows[dgvLog.Rows.Count - 1].Cells[logColLine].Value = line;
+                dgvLog.Rows[dgvLog.Rows.Count - 1].Cells[logColIO].Value = io;
+                dgvLog.Rows[dgvLog.Rows.Count - 1].Cells[logColSE].Value = se;
+                dgvLog.Rows[dgvLog.Rows.Count - 1].Cells[logColDur].Value = duration;
+                dgvLog.Rows[dgvLog.Rows.Count - 1].Cells[logColRing].Value = ring;
+                dgvLog.Rows[dgvLog.Rows.Count - 1].Cells[logColDateTime].Value = dateTime;
+                dgvLog.Rows[dgvLog.Rows.Count - 1].Cells[logColName].Value = name;
+                dgvLog.Rows[dgvLog.Rows.Count - 1].Cells[logColNumber].Value = number;
+                dgvLog.Rows[dgvLog.Rows.Count - 1].Cells[logColS].Value = "L";
+                dgvLog.Rows[dgvLog.Rows.Count - 1].Cells[logColLogID].Value = log_id;
+                dgvLog.Rows[dgvLog.Rows.Count - 1].Cells[logColText].Value = "";
 
-            // Change font to smaller font
-            dgvLog.Rows[dgvLog.Rows.Count - 1].DefaultCellStyle.Font = new Font("Segoe UI", 8, FontStyle.Regular);
+                // Change font to smaller font
+                dgvLog.Rows[dgvLog.Rows.Count - 1].DefaultCellStyle.Font = new Font("Segoe UI", 8, FontStyle.Regular);
 
-            // Auto Scroll
-            dgvLog.FirstDisplayedScrollingRowIndex = dgvLog.RowCount - 1;
+                // Auto Scroll
+                dgvLog.FirstDisplayedScrollingRowIndex = dgvLog.RowCount - 1;
+            }
 
             // Add to SQL database
             if (addToSQL) callLog.InsertIntoLog(line, dateTime, number, name, io, se, status, duration, ring);
@@ -558,7 +603,8 @@ namespace CallerID_Cloud_Relay
                 Console.WriteLine("No log to load.");
                 return;
             }
-            
+
+            dgvLog.Rows.Clear();
             foreach (DataRow row in logData.Rows)
             {
 
@@ -715,7 +761,7 @@ namespace CallerID_Cloud_Relay
 
             if(!urlFull.Contains("?"))
             {
-                Common.MsgBox("Error Parsing URL", Environment.NewLine + Environment.NewLine + "Could not parse URL. There is no separation between URL and Params.");
+                Common.MsgBox("Error Parsing URL", Environment.NewLine + Environment.NewLine + "Could not parse URL. There is no separation between URL and Params.", true, 1000);
                 return;
             }
             
@@ -790,6 +836,7 @@ namespace CallerID_Cloud_Relay
             {
                 Common.MsgBox("URL Error", Environment.NewLine + "Error connecting to server." + Environment.NewLine + Environment.NewLine + ex.ToString(), false, 5000);
 
+                Common.WriteToLog(ex.ToString());
             }
 
             
@@ -872,6 +919,7 @@ namespace CallerID_Cloud_Relay
             Program.FUrlSend.Show();
             Program.FUrlSend.WindowState = FormWindowState.Normal;
             sysTray.Visible = false;
+            LoadLog();
         }
 
         private void TimerSySTrayHide_Tick(object sender, EventArgs e)

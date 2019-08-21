@@ -17,6 +17,7 @@ namespace cid_cm.Classes
         public Match DetailedMatch;
 
         // Properties
+        public string Reception;
         public bool Detailed;
         public string DetailedType;
         public int Line;
@@ -35,6 +36,7 @@ namespace cid_cm.Classes
         public CallRecord(string udp_string)
         {
             Reception_String = udp_string;
+            Reception = udp_string;
             InternalBlock = false;
 
             //------------------------------------------------------

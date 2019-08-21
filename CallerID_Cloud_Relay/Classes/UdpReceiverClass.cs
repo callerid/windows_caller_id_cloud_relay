@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Windows.Forms;
 using CallerID_Cloud_Relay;
+using CallerID_Cloud_Relay.Classes;
 
 namespace cid_cm.Classes
 {
@@ -89,6 +90,7 @@ namespace cid_cm.Classes
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+                Common.WriteToLog("LOST BOUND: " + ex.ToString());
             }
 
             listener.Close();

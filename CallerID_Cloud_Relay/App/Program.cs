@@ -10,6 +10,7 @@ namespace CallerID_Cloud_Relay
     {
         public static FrmURLSend FUrlSend;
         public static FrmPopup FPopupMessage;
+        public static string ErrorLogFile = Application.StartupPath + "\\error_log.txt";
 
         [STAThread]
         static void Main()
