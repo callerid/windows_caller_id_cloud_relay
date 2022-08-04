@@ -29,10 +29,18 @@ namespace CallerID_Cloud_Relay.Classes
 
         public static void WriteToLog(string text)
         {
-            if (!File.Exists(Program.ErrorLogFile)) File.Create(Program.ErrorLogFile);
+            if (!File.Exists(Program.ErrorLogFile)) File.Create(Program.ErrorLogFile).Close();
 
             string old_text = File.ReadAllText(Program.ErrorLogFile);
-            File.WriteAllText(Program.ErrorLogFile, old_text + Environment.NewLine + text);
+            File.WriteAllText(Program.ErrorLogFile, old_text + Environment.NewLine + "(" + DateTime.Now.ToString() + ") :: " + text);
+        }
+
+        public static void WriteToCallLog(string text)
+        {
+            if (!File.Exists(Program.CallLogFile)) File.Create(Program.CallLogFile).Close();
+
+            string old_text = File.ReadAllText(Program.CallLogFile);
+            File.WriteAllText(Program.CallLogFile, old_text + Environment.NewLine + "(" + DateTime.Now.ToString() + ") :: " + text);
         }
 
     }

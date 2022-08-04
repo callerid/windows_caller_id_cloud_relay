@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Windows.Forms;
 using CallerID_Cloud_Relay.Forms;
 
@@ -10,11 +11,13 @@ namespace CallerID_Cloud_Relay
     {
         public static FrmURLSend FUrlSend;
         public static FrmPopup FPopupMessage;
-        public static string ErrorLogFile = Application.StartupPath + "\\error_log.txt";
+        public static string ErrorLogFile = Application.StartupPath + "\\logs\\error_log.txt";
+        public static string CallLogFile = Application.StartupPath + "\\logs\\call_log.txt";
 
         [STAThread]
         static void Main()
         {
+            ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
             int numberOfInstances = System.Diagnostics.Process.GetProcessesByName(System.IO.Path.GetFileNameWithoutExtension(System.Reflection.Assembly.GetEntryAssembly().Location)).Length;
             
             if(numberOfInstances > 1)

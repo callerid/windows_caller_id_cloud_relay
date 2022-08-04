@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmURLSend));
             this.gbAuthenication = new System.Windows.Forms.GroupBox();
+            this.ckbIgnoreChannelOverflow = new System.Windows.Forms.CheckBox();
             this.ckbHideInSystemTray = new System.Windows.Forms.CheckBox();
             this.tbPassword = new System.Windows.Forms.TextBox();
             this.lbPassword = new System.Windows.Forms.Label();
@@ -49,49 +50,50 @@
             this.rbDeluxeUnit = new System.Windows.Forms.RadioButton();
             this.btnTestSuppliedURL = new System.Windows.Forms.Button();
             this.gbDevSection = new System.Windows.Forms.GroupBox();
+            this.panScrollArea = new System.Windows.Forms.Panel();
+            this.lbLine = new System.Windows.Forms.Label();
+            this.lbTime = new System.Windows.Forms.Label();
+            this.lbPhone = new System.Windows.Forms.Label();
+            this.lbName = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.lbRingTypeD = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.lbIO = new System.Windows.Forms.Label();
+            this.lbRingNumberD = new System.Windows.Forms.Label();
+            this.tbRingType = new System.Windows.Forms.TextBox();
+            this.lbDurationD = new System.Windows.Forms.Label();
+            this.lbSE = new System.Windows.Forms.Label();
+            this.lbStatusD = new System.Windows.Forms.Label();
+            this.lbRingType = new System.Windows.Forms.Label();
+            this.lbSED = new System.Windows.Forms.Label();
+            this.tbRingNumber = new System.Windows.Forms.TextBox();
+            this.lbIOD = new System.Windows.Forms.Label();
+            this.lbStatus = new System.Windows.Forms.Label();
+            this.lbNameD = new System.Windows.Forms.Label();
+            this.lbDuration = new System.Windows.Forms.Label();
+            this.lbPhoneD = new System.Windows.Forms.Label();
+            this.tbDuration = new System.Windows.Forms.TextBox();
+            this.lbTimeD = new System.Windows.Forms.Label();
+            this.lbRingNumber = new System.Windows.Forms.Label();
+            this.lbLineD = new System.Windows.Forms.Label();
+            this.tbLine = new System.Windows.Forms.TextBox();
+            this.tbStatus = new System.Windows.Forms.TextBox();
+            this.tbTime = new System.Windows.Forms.TextBox();
+            this.tbPhone = new System.Windows.Forms.TextBox();
+            this.tbSE = new System.Windows.Forms.TextBox();
+            this.tbName = new System.Windows.Forms.TextBox();
+            this.tbIO = new System.Windows.Forms.TextBox();
             this.lbSuccessfulGen = new System.Windows.Forms.Label();
             this.btnGenerateURL = new System.Windows.Forms.Button();
             this.btnCopyBuiltURL = new System.Windows.Forms.Button();
-            this.lbRingTypeD = new System.Windows.Forms.Label();
-            this.tbRingType = new System.Windows.Forms.TextBox();
-            this.lbRingType = new System.Windows.Forms.Label();
-            this.lbRingNumberD = new System.Windows.Forms.Label();
-            this.tbRingNumber = new System.Windows.Forms.TextBox();
-            this.lbRingNumber = new System.Windows.Forms.Label();
-            this.lbDurationD = new System.Windows.Forms.Label();
-            this.tbDuration = new System.Windows.Forms.TextBox();
-            this.lbDuration = new System.Windows.Forms.Label();
-            this.lbStatusD = new System.Windows.Forms.Label();
-            this.tbStatus = new System.Windows.Forms.TextBox();
-            this.lbStatus = new System.Windows.Forms.Label();
-            this.lbSED = new System.Windows.Forms.Label();
-            this.tbSE = new System.Windows.Forms.TextBox();
-            this.lbSE = new System.Windows.Forms.Label();
-            this.lbIOD = new System.Windows.Forms.Label();
-            this.tbIO = new System.Windows.Forms.TextBox();
-            this.lbIO = new System.Windows.Forms.Label();
-            this.lbNameD = new System.Windows.Forms.Label();
-            this.tbName = new System.Windows.Forms.TextBox();
-            this.lbName = new System.Windows.Forms.Label();
-            this.lbPhoneD = new System.Windows.Forms.Label();
-            this.tbPhone = new System.Windows.Forms.TextBox();
-            this.lbPhone = new System.Windows.Forms.Label();
-            this.lbTimeD = new System.Windows.Forms.Label();
-            this.tbTime = new System.Windows.Forms.TextBox();
-            this.lbTime = new System.Windows.Forms.Label();
-            this.lbLineD = new System.Windows.Forms.Label();
-            this.tbLine = new System.Windows.Forms.TextBox();
-            this.lbLine = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
             this.tbGeneratedURL = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.tbServer = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.gbLog = new System.Windows.Forms.GroupBox();
-            this.btnClearLog = new System.Windows.Forms.Button();
+            this.btnLogs = new System.Windows.Forms.Button();
             this.dgvLog = new System.Windows.Forms.DataGridView();
             this.colLine = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colInOut = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -104,6 +106,7 @@
             this.dgvLogSuccess = new System.Windows.Forms.DataGridViewButtonColumn();
             this.dgvLogID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgvLogColText = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btnClearLog = new System.Windows.Forms.Button();
             this.timerShowBoundPort = new System.Windows.Forms.Timer(this.components);
             this.timerHideGenerateSuccess = new System.Windows.Forms.Timer(this.components);
             this.sysTray = new System.Windows.Forms.NotifyIcon(this.components);
@@ -114,12 +117,14 @@
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.gbDevSection.SuspendLayout();
+            this.panScrollArea.SuspendLayout();
             this.gbLog.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvLog)).BeginInit();
             this.SuspendLayout();
             // 
             // gbAuthenication
             // 
+            this.gbAuthenication.Controls.Add(this.ckbIgnoreChannelOverflow);
             this.gbAuthenication.Controls.Add(this.ckbHideInSystemTray);
             this.gbAuthenication.Controls.Add(this.tbPassword);
             this.gbAuthenication.Controls.Add(this.lbPassword);
@@ -132,7 +137,17 @@
             this.gbAuthenication.Size = new System.Drawing.Size(697, 63);
             this.gbAuthenication.TabIndex = 1;
             this.gbAuthenication.TabStop = false;
-            this.gbAuthenication.Text = "Authenication";
+            this.gbAuthenication.Text = "Authentication";
+            // 
+            // ckbIgnoreChannelOverflow
+            // 
+            this.ckbIgnoreChannelOverflow.AutoSize = true;
+            this.ckbIgnoreChannelOverflow.Location = new System.Drawing.Point(265, 0);
+            this.ckbIgnoreChannelOverflow.Name = "ckbIgnoreChannelOverflow";
+            this.ckbIgnoreChannelOverflow.Size = new System.Drawing.Size(188, 21);
+            this.ckbIgnoreChannelOverflow.TabIndex = 11;
+            this.ckbIgnoreChannelOverflow.Text = "Ignore Exceeded Channels";
+            this.ckbIgnoreChannelOverflow.UseVisualStyleBackColor = true;
             // 
             // ckbHideInSystemTray
             // 
@@ -192,9 +207,9 @@
             this.ckbRequiresAuthenication.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ckbRequiresAuthenication.Location = new System.Drawing.Point(19, 30);
             this.ckbRequiresAuthenication.Name = "ckbRequiresAuthenication";
-            this.ckbRequiresAuthenication.Size = new System.Drawing.Size(266, 17);
+            this.ckbRequiresAuthenication.Size = new System.Drawing.Size(270, 17);
             this.ckbRequiresAuthenication.TabIndex = 1;
-            this.ckbRequiresAuthenication.Text = "Does your Cloud Server require authenication?";
+            this.ckbRequiresAuthenication.Text = "Does your Cloud Server require authentication?";
             this.ckbRequiresAuthenication.UseVisualStyleBackColor = true;
             this.ckbRequiresAuthenication.CheckedChanged += new System.EventHandler(this.AuthRequriedCheckChange);
             // 
@@ -206,7 +221,7 @@
             this.gbSuppliedUrl.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.gbSuppliedUrl.Location = new System.Drawing.Point(12, 125);
             this.gbSuppliedUrl.Name = "gbSuppliedUrl";
-            this.gbSuppliedUrl.Size = new System.Drawing.Size(697, 89);
+            this.gbSuppliedUrl.Size = new System.Drawing.Size(697, 76);
             this.gbSuppliedUrl.TabIndex = 6;
             this.gbSuppliedUrl.TabStop = false;
             this.gbSuppliedUrl.Text = "Supplied URL";
@@ -217,7 +232,7 @@
             this.btnPaste.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnPaste.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnPaste.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnPaste.Location = new System.Drawing.Point(552, 60);
+            this.btnPaste.Location = new System.Drawing.Point(552, 48);
             this.btnPaste.Name = "btnPaste";
             this.btnPaste.Size = new System.Drawing.Size(139, 23);
             this.btnPaste.TabIndex = 10;
@@ -230,7 +245,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(6, 58);
+            this.label1.Location = new System.Drawing.Point(6, 49);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(519, 13);
             this.label1.TabIndex = 6;
@@ -241,7 +256,7 @@
             // 
             this.tbSuppliedURL.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.tbSuppliedURL.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSuppliedURL.Location = new System.Drawing.Point(6, 32);
+            this.tbSuppliedURL.Location = new System.Drawing.Point(6, 23);
             this.tbSuppliedURL.Name = "tbSuppliedURL";
             this.tbSuppliedURL.Size = new System.Drawing.Size(685, 22);
             this.tbSuppliedURL.TabIndex = 2;
@@ -261,7 +276,7 @@
             this.rbUseBuiltUrl.AutoSize = true;
             this.rbUseBuiltUrl.Location = new System.Drawing.Point(138, 10);
             this.rbUseBuiltUrl.Name = "rbUseBuiltUrl";
-            this.rbUseBuiltUrl.Size = new System.Drawing.Size(94, 17);
+            this.rbUseBuiltUrl.Size = new System.Drawing.Size(93, 17);
             this.rbUseBuiltUrl.TabIndex = 1;
             this.rbUseBuiltUrl.Text = "Use Built URL";
             this.rbUseBuiltUrl.UseVisualStyleBackColor = true;
@@ -296,7 +311,7 @@
             this.rbBasicUnit.Checked = true;
             this.rbBasicUnit.Location = new System.Drawing.Point(23, 10);
             this.rbBasicUnit.Name = "rbBasicUnit";
-            this.rbBasicUnit.Size = new System.Drawing.Size(76, 17);
+            this.rbBasicUnit.Size = new System.Drawing.Size(75, 17);
             this.rbBasicUnit.TabIndex = 1;
             this.rbBasicUnit.TabStop = true;
             this.rbBasicUnit.Text = "Basic Unit";
@@ -330,54 +345,393 @@
             // 
             // gbDevSection
             // 
+            this.gbDevSection.Controls.Add(this.panScrollArea);
             this.gbDevSection.Controls.Add(this.lbSuccessfulGen);
             this.gbDevSection.Controls.Add(this.btnGenerateURL);
             this.gbDevSection.Controls.Add(this.btnCopyBuiltURL);
-            this.gbDevSection.Controls.Add(this.lbRingTypeD);
-            this.gbDevSection.Controls.Add(this.tbRingType);
-            this.gbDevSection.Controls.Add(this.lbRingType);
-            this.gbDevSection.Controls.Add(this.lbRingNumberD);
-            this.gbDevSection.Controls.Add(this.tbRingNumber);
-            this.gbDevSection.Controls.Add(this.lbRingNumber);
-            this.gbDevSection.Controls.Add(this.lbDurationD);
-            this.gbDevSection.Controls.Add(this.tbDuration);
-            this.gbDevSection.Controls.Add(this.lbDuration);
-            this.gbDevSection.Controls.Add(this.lbStatusD);
-            this.gbDevSection.Controls.Add(this.tbStatus);
-            this.gbDevSection.Controls.Add(this.lbStatus);
-            this.gbDevSection.Controls.Add(this.lbSED);
-            this.gbDevSection.Controls.Add(this.tbSE);
-            this.gbDevSection.Controls.Add(this.lbSE);
-            this.gbDevSection.Controls.Add(this.lbIOD);
-            this.gbDevSection.Controls.Add(this.tbIO);
-            this.gbDevSection.Controls.Add(this.lbIO);
-            this.gbDevSection.Controls.Add(this.lbNameD);
-            this.gbDevSection.Controls.Add(this.tbName);
-            this.gbDevSection.Controls.Add(this.lbName);
-            this.gbDevSection.Controls.Add(this.lbPhoneD);
-            this.gbDevSection.Controls.Add(this.tbPhone);
-            this.gbDevSection.Controls.Add(this.lbPhone);
-            this.gbDevSection.Controls.Add(this.lbTimeD);
-            this.gbDevSection.Controls.Add(this.tbTime);
-            this.gbDevSection.Controls.Add(this.lbTime);
-            this.gbDevSection.Controls.Add(this.lbLineD);
-            this.gbDevSection.Controls.Add(this.tbLine);
-            this.gbDevSection.Controls.Add(this.lbLine);
-            this.gbDevSection.Controls.Add(this.label7);
-            this.gbDevSection.Controls.Add(this.label6);
-            this.gbDevSection.Controls.Add(this.label5);
             this.gbDevSection.Controls.Add(this.tbGeneratedURL);
             this.gbDevSection.Controls.Add(this.label3);
             this.gbDevSection.Controls.Add(this.label2);
             this.gbDevSection.Controls.Add(this.tbServer);
             this.gbDevSection.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.gbDevSection.Location = new System.Drawing.Point(12, 220);
+            this.gbDevSection.Location = new System.Drawing.Point(12, 207);
             this.gbDevSection.Name = "gbDevSection";
-            this.gbDevSection.Size = new System.Drawing.Size(697, 446);
+            this.gbDevSection.Size = new System.Drawing.Size(697, 444);
             this.gbDevSection.TabIndex = 7;
             this.gbDevSection.TabStop = false;
             this.gbDevSection.Text = "Developers Section - Build the relay URL by entering the Cloud Server address and" +
     " mapping data fields";
+            // 
+            // panScrollArea
+            // 
+            this.panScrollArea.AutoScroll = true;
+            this.panScrollArea.Controls.Add(this.lbLine);
+            this.panScrollArea.Controls.Add(this.lbTime);
+            this.panScrollArea.Controls.Add(this.lbPhone);
+            this.panScrollArea.Controls.Add(this.lbName);
+            this.panScrollArea.Controls.Add(this.label7);
+            this.panScrollArea.Controls.Add(this.lbRingTypeD);
+            this.panScrollArea.Controls.Add(this.label5);
+            this.panScrollArea.Controls.Add(this.label6);
+            this.panScrollArea.Controls.Add(this.lbIO);
+            this.panScrollArea.Controls.Add(this.lbRingNumberD);
+            this.panScrollArea.Controls.Add(this.tbRingType);
+            this.panScrollArea.Controls.Add(this.lbDurationD);
+            this.panScrollArea.Controls.Add(this.lbSE);
+            this.panScrollArea.Controls.Add(this.lbStatusD);
+            this.panScrollArea.Controls.Add(this.lbRingType);
+            this.panScrollArea.Controls.Add(this.lbSED);
+            this.panScrollArea.Controls.Add(this.tbRingNumber);
+            this.panScrollArea.Controls.Add(this.lbIOD);
+            this.panScrollArea.Controls.Add(this.lbStatus);
+            this.panScrollArea.Controls.Add(this.lbNameD);
+            this.panScrollArea.Controls.Add(this.lbDuration);
+            this.panScrollArea.Controls.Add(this.lbPhoneD);
+            this.panScrollArea.Controls.Add(this.tbDuration);
+            this.panScrollArea.Controls.Add(this.lbTimeD);
+            this.panScrollArea.Controls.Add(this.lbRingNumber);
+            this.panScrollArea.Controls.Add(this.lbLineD);
+            this.panScrollArea.Controls.Add(this.tbLine);
+            this.panScrollArea.Controls.Add(this.tbStatus);
+            this.panScrollArea.Controls.Add(this.tbTime);
+            this.panScrollArea.Controls.Add(this.tbPhone);
+            this.panScrollArea.Controls.Add(this.tbSE);
+            this.panScrollArea.Controls.Add(this.tbName);
+            this.panScrollArea.Controls.Add(this.tbIO);
+            this.panScrollArea.Location = new System.Drawing.Point(9, 130);
+            this.panScrollArea.Name = "panScrollArea";
+            this.panScrollArea.Size = new System.Drawing.Size(660, 319);
+            this.panScrollArea.TabIndex = 42;
+            // 
+            // lbLine
+            // 
+            this.lbLine.AutoSize = true;
+            this.lbLine.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbLine.Location = new System.Drawing.Point(42, 21);
+            this.lbLine.Name = "lbLine";
+            this.lbLine.Size = new System.Drawing.Size(43, 17);
+            this.lbLine.TabIndex = 12;
+            this.lbLine.Text = "%Line";
+            // 
+            // lbTime
+            // 
+            this.lbTime.AutoSize = true;
+            this.lbTime.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbTime.Location = new System.Drawing.Point(42, 49);
+            this.lbTime.Name = "lbTime";
+            this.lbTime.Size = new System.Drawing.Size(48, 17);
+            this.lbTime.TabIndex = 15;
+            this.lbTime.Text = "%Time";
+            // 
+            // lbPhone
+            // 
+            this.lbPhone.AutoSize = true;
+            this.lbPhone.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbPhone.Location = new System.Drawing.Point(42, 77);
+            this.lbPhone.Name = "lbPhone";
+            this.lbPhone.Size = new System.Drawing.Size(58, 17);
+            this.lbPhone.TabIndex = 18;
+            this.lbPhone.Text = "%Phone";
+            // 
+            // lbName
+            // 
+            this.lbName.AutoSize = true;
+            this.lbName.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbName.Location = new System.Drawing.Point(42, 105);
+            this.lbName.Name = "lbName";
+            this.lbName.Size = new System.Drawing.Size(55, 17);
+            this.lbName.TabIndex = 21;
+            this.lbName.Text = "%Name";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(380, -1);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(85, 17);
+            this.label7.TabIndex = 11;
+            this.label7.Text = "Descriptions";
+            // 
+            // lbRingTypeD
+            // 
+            this.lbRingTypeD.AutoSize = true;
+            this.lbRingTypeD.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbRingTypeD.Location = new System.Drawing.Point(363, 273);
+            this.lbRingTypeD.Name = "lbRingTypeD";
+            this.lbRingTypeD.Size = new System.Drawing.Size(101, 17);
+            this.lbRingTypeD.TabIndex = 40;
+            this.lbRingTypeD.Text = "Distinctive Ring";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(19, -1);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(146, 17);
+            this.label5.TabIndex = 9;
+            this.label5.Text = "CallerID.com Variables";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(182, -1);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(163, 17);
+            this.label6.TabIndex = 10;
+            this.label6.Text = "Your Parameter Variables";
+            // 
+            // lbIO
+            // 
+            this.lbIO.AutoSize = true;
+            this.lbIO.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbIO.Location = new System.Drawing.Point(42, 133);
+            this.lbIO.Name = "lbIO";
+            this.lbIO.Size = new System.Drawing.Size(33, 17);
+            this.lbIO.TabIndex = 24;
+            this.lbIO.Text = "%IO";
+            // 
+            // lbRingNumberD
+            // 
+            this.lbRingNumberD.AutoSize = true;
+            this.lbRingNumberD.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbRingNumberD.Location = new System.Drawing.Point(363, 245);
+            this.lbRingNumberD.Name = "lbRingNumberD";
+            this.lbRingNumberD.Size = new System.Drawing.Size(270, 17);
+            this.lbRingNumberD.TabIndex = 37;
+            this.lbRingNumberD.Text = "Number of Rings Before Call was Answered";
+            // 
+            // tbRingType
+            // 
+            this.tbRingType.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.tbRingType.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbRingType.Location = new System.Drawing.Point(168, 273);
+            this.tbRingType.Name = "tbRingType";
+            this.tbRingType.Size = new System.Drawing.Size(160, 22);
+            this.tbRingType.TabIndex = 13;
+            this.tbRingType.Leave += new System.EventHandler(this.ParamLeaveFocus);
+            // 
+            // lbDurationD
+            // 
+            this.lbDurationD.AutoSize = true;
+            this.lbDurationD.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbDurationD.Location = new System.Drawing.Point(363, 217);
+            this.lbDurationD.Name = "lbDurationD";
+            this.lbDurationD.Size = new System.Drawing.Size(91, 17);
+            this.lbDurationD.TabIndex = 34;
+            this.lbDurationD.Text = "Length of Call";
+            // 
+            // lbSE
+            // 
+            this.lbSE.AutoSize = true;
+            this.lbSE.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbSE.Location = new System.Drawing.Point(42, 161);
+            this.lbSE.Name = "lbSE";
+            this.lbSE.Size = new System.Drawing.Size(33, 17);
+            this.lbSE.TabIndex = 27;
+            this.lbSE.Text = "%SE";
+            // 
+            // lbStatusD
+            // 
+            this.lbStatusD.AutoSize = true;
+            this.lbStatusD.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbStatusD.Location = new System.Drawing.Point(363, 189);
+            this.lbStatusD.Name = "lbStatusD";
+            this.lbStatusD.Size = new System.Drawing.Size(142, 17);
+            this.lbStatusD.TabIndex = 31;
+            this.lbStatusD.Text = "Detailed Phone Status";
+            // 
+            // lbRingType
+            // 
+            this.lbRingType.AutoSize = true;
+            this.lbRingType.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbRingType.Location = new System.Drawing.Point(42, 273);
+            this.lbRingType.Name = "lbRingType";
+            this.lbRingType.Size = new System.Drawing.Size(74, 17);
+            this.lbRingType.TabIndex = 39;
+            this.lbRingType.Text = "%RingType";
+            // 
+            // lbSED
+            // 
+            this.lbSED.AutoSize = true;
+            this.lbSED.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbSED.Location = new System.Drawing.Point(363, 161);
+            this.lbSED.Name = "lbSED";
+            this.lbSED.Size = new System.Drawing.Size(122, 17);
+            this.lbSED.TabIndex = 28;
+            this.lbSED.Text = "Start or End of Call";
+            // 
+            // tbRingNumber
+            // 
+            this.tbRingNumber.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.tbRingNumber.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbRingNumber.Location = new System.Drawing.Point(168, 245);
+            this.tbRingNumber.Name = "tbRingNumber";
+            this.tbRingNumber.Size = new System.Drawing.Size(160, 22);
+            this.tbRingNumber.TabIndex = 12;
+            this.tbRingNumber.Leave += new System.EventHandler(this.ParamLeaveFocus);
+            // 
+            // lbIOD
+            // 
+            this.lbIOD.AutoSize = true;
+            this.lbIOD.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbIOD.Location = new System.Drawing.Point(363, 133);
+            this.lbIOD.Name = "lbIOD";
+            this.lbIOD.Size = new System.Drawing.Size(169, 17);
+            this.lbIOD.TabIndex = 25;
+            this.lbIOD.Text = "Inbound or Outbound Call";
+            // 
+            // lbStatus
+            // 
+            this.lbStatus.AutoSize = true;
+            this.lbStatus.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbStatus.Location = new System.Drawing.Point(42, 189);
+            this.lbStatus.Name = "lbStatus";
+            this.lbStatus.Size = new System.Drawing.Size(57, 17);
+            this.lbStatus.TabIndex = 30;
+            this.lbStatus.Text = "%Status";
+            // 
+            // lbNameD
+            // 
+            this.lbNameD.AutoSize = true;
+            this.lbNameD.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbNameD.Location = new System.Drawing.Point(363, 105);
+            this.lbNameD.Name = "lbNameD";
+            this.lbNameD.Size = new System.Drawing.Size(98, 17);
+            this.lbNameD.TabIndex = 22;
+            this.lbNameD.Text = "Caller ID Name";
+            // 
+            // lbDuration
+            // 
+            this.lbDuration.AutoSize = true;
+            this.lbDuration.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbDuration.Location = new System.Drawing.Point(42, 217);
+            this.lbDuration.Name = "lbDuration";
+            this.lbDuration.Size = new System.Drawing.Size(72, 17);
+            this.lbDuration.TabIndex = 33;
+            this.lbDuration.Text = "%Duration";
+            // 
+            // lbPhoneD
+            // 
+            this.lbPhoneD.AutoSize = true;
+            this.lbPhoneD.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbPhoneD.Location = new System.Drawing.Point(363, 77);
+            this.lbPhoneD.Name = "lbPhoneD";
+            this.lbPhoneD.Size = new System.Drawing.Size(112, 17);
+            this.lbPhoneD.TabIndex = 19;
+            this.lbPhoneD.Text = "Caller ID Number";
+            // 
+            // tbDuration
+            // 
+            this.tbDuration.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.tbDuration.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbDuration.Location = new System.Drawing.Point(168, 217);
+            this.tbDuration.Name = "tbDuration";
+            this.tbDuration.Size = new System.Drawing.Size(160, 22);
+            this.tbDuration.TabIndex = 11;
+            this.tbDuration.Leave += new System.EventHandler(this.ParamLeaveFocus);
+            // 
+            // lbTimeD
+            // 
+            this.lbTimeD.AutoSize = true;
+            this.lbTimeD.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbTimeD.Location = new System.Drawing.Point(363, 49);
+            this.lbTimeD.Name = "lbTimeD";
+            this.lbTimeD.Size = new System.Drawing.Size(137, 17);
+            this.lbTimeD.TabIndex = 16;
+            this.lbTimeD.Text = "Time and Date of Call";
+            // 
+            // lbRingNumber
+            // 
+            this.lbRingNumber.AutoSize = true;
+            this.lbRingNumber.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbRingNumber.Location = new System.Drawing.Point(42, 245);
+            this.lbRingNumber.Name = "lbRingNumber";
+            this.lbRingNumber.Size = new System.Drawing.Size(96, 17);
+            this.lbRingNumber.TabIndex = 36;
+            this.lbRingNumber.Text = "%RingNumber";
+            // 
+            // lbLineD
+            // 
+            this.lbLineD.AutoSize = true;
+            this.lbLineD.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbLineD.Location = new System.Drawing.Point(363, 21);
+            this.lbLineD.Name = "lbLineD";
+            this.lbLineD.Size = new System.Drawing.Size(111, 17);
+            this.lbLineD.TabIndex = 13;
+            this.lbLineD.Text = "Call Line Number";
+            // 
+            // tbLine
+            // 
+            this.tbLine.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.tbLine.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbLine.Location = new System.Drawing.Point(168, 21);
+            this.tbLine.Name = "tbLine";
+            this.tbLine.Size = new System.Drawing.Size(160, 22);
+            this.tbLine.TabIndex = 4;
+            this.tbLine.Leave += new System.EventHandler(this.ParamLeaveFocus);
+            // 
+            // tbStatus
+            // 
+            this.tbStatus.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.tbStatus.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbStatus.Location = new System.Drawing.Point(168, 189);
+            this.tbStatus.Name = "tbStatus";
+            this.tbStatus.Size = new System.Drawing.Size(160, 22);
+            this.tbStatus.TabIndex = 10;
+            this.tbStatus.Leave += new System.EventHandler(this.ParamLeaveFocus);
+            // 
+            // tbTime
+            // 
+            this.tbTime.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.tbTime.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbTime.Location = new System.Drawing.Point(168, 49);
+            this.tbTime.Name = "tbTime";
+            this.tbTime.Size = new System.Drawing.Size(160, 22);
+            this.tbTime.TabIndex = 5;
+            this.tbTime.Leave += new System.EventHandler(this.ParamLeaveFocus);
+            // 
+            // tbPhone
+            // 
+            this.tbPhone.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.tbPhone.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbPhone.Location = new System.Drawing.Point(168, 77);
+            this.tbPhone.Name = "tbPhone";
+            this.tbPhone.Size = new System.Drawing.Size(160, 22);
+            this.tbPhone.TabIndex = 6;
+            this.tbPhone.Leave += new System.EventHandler(this.ParamLeaveFocus);
+            // 
+            // tbSE
+            // 
+            this.tbSE.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.tbSE.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbSE.Location = new System.Drawing.Point(168, 161);
+            this.tbSE.Name = "tbSE";
+            this.tbSE.Size = new System.Drawing.Size(160, 22);
+            this.tbSE.TabIndex = 9;
+            this.tbSE.Leave += new System.EventHandler(this.ParamLeaveFocus);
+            // 
+            // tbName
+            // 
+            this.tbName.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.tbName.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbName.Location = new System.Drawing.Point(168, 105);
+            this.tbName.Name = "tbName";
+            this.tbName.Size = new System.Drawing.Size(160, 22);
+            this.tbName.TabIndex = 7;
+            this.tbName.Leave += new System.EventHandler(this.ParamLeaveFocus);
+            // 
+            // tbIO
+            // 
+            this.tbIO.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.tbIO.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbIO.Location = new System.Drawing.Point(168, 133);
+            this.tbIO.Name = "tbIO";
+            this.tbIO.Size = new System.Drawing.Size(160, 22);
+            this.tbIO.TabIndex = 8;
+            this.tbIO.Leave += new System.EventHandler(this.ParamLeaveFocus);
             // 
             // lbSuccessfulGen
             // 
@@ -419,336 +773,6 @@
             this.btnCopyBuiltURL.UseVisualStyleBackColor = true;
             this.btnCopyBuiltURL.Click += new System.EventHandler(this.BtnCopyBuiltURL_Click);
             // 
-            // lbRingTypeD
-            // 
-            this.lbRingTypeD.AutoSize = true;
-            this.lbRingTypeD.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRingTypeD.Location = new System.Drawing.Point(384, 410);
-            this.lbRingTypeD.Name = "lbRingTypeD";
-            this.lbRingTypeD.Size = new System.Drawing.Size(101, 17);
-            this.lbRingTypeD.TabIndex = 40;
-            this.lbRingTypeD.Text = "Distinctive Ring";
-            // 
-            // tbRingType
-            // 
-            this.tbRingType.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.tbRingType.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbRingType.Location = new System.Drawing.Point(192, 410);
-            this.tbRingType.Name = "tbRingType";
-            this.tbRingType.Size = new System.Drawing.Size(160, 22);
-            this.tbRingType.TabIndex = 13;
-            this.tbRingType.Leave += new System.EventHandler(this.ParamLeaveFocus);
-            // 
-            // lbRingType
-            // 
-            this.lbRingType.AutoSize = true;
-            this.lbRingType.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRingType.Location = new System.Drawing.Point(49, 410);
-            this.lbRingType.Name = "lbRingType";
-            this.lbRingType.Size = new System.Drawing.Size(74, 17);
-            this.lbRingType.TabIndex = 39;
-            this.lbRingType.Text = "%RingType";
-            // 
-            // lbRingNumberD
-            // 
-            this.lbRingNumberD.AutoSize = true;
-            this.lbRingNumberD.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRingNumberD.Location = new System.Drawing.Point(384, 382);
-            this.lbRingNumberD.Name = "lbRingNumberD";
-            this.lbRingNumberD.Size = new System.Drawing.Size(270, 17);
-            this.lbRingNumberD.TabIndex = 37;
-            this.lbRingNumberD.Text = "Number of Rings Before Call was Answered";
-            // 
-            // tbRingNumber
-            // 
-            this.tbRingNumber.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.tbRingNumber.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbRingNumber.Location = new System.Drawing.Point(192, 382);
-            this.tbRingNumber.Name = "tbRingNumber";
-            this.tbRingNumber.Size = new System.Drawing.Size(160, 22);
-            this.tbRingNumber.TabIndex = 12;
-            this.tbRingNumber.Leave += new System.EventHandler(this.ParamLeaveFocus);
-            // 
-            // lbRingNumber
-            // 
-            this.lbRingNumber.AutoSize = true;
-            this.lbRingNumber.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbRingNumber.Location = new System.Drawing.Point(49, 382);
-            this.lbRingNumber.Name = "lbRingNumber";
-            this.lbRingNumber.Size = new System.Drawing.Size(96, 17);
-            this.lbRingNumber.TabIndex = 36;
-            this.lbRingNumber.Text = "%RingNumber";
-            // 
-            // lbDurationD
-            // 
-            this.lbDurationD.AutoSize = true;
-            this.lbDurationD.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbDurationD.Location = new System.Drawing.Point(384, 354);
-            this.lbDurationD.Name = "lbDurationD";
-            this.lbDurationD.Size = new System.Drawing.Size(91, 17);
-            this.lbDurationD.TabIndex = 34;
-            this.lbDurationD.Text = "Length of Call";
-            // 
-            // tbDuration
-            // 
-            this.tbDuration.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.tbDuration.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbDuration.Location = new System.Drawing.Point(192, 354);
-            this.tbDuration.Name = "tbDuration";
-            this.tbDuration.Size = new System.Drawing.Size(160, 22);
-            this.tbDuration.TabIndex = 11;
-            this.tbDuration.Leave += new System.EventHandler(this.ParamLeaveFocus);
-            // 
-            // lbDuration
-            // 
-            this.lbDuration.AutoSize = true;
-            this.lbDuration.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbDuration.Location = new System.Drawing.Point(49, 354);
-            this.lbDuration.Name = "lbDuration";
-            this.lbDuration.Size = new System.Drawing.Size(72, 17);
-            this.lbDuration.TabIndex = 33;
-            this.lbDuration.Text = "%Duration";
-            // 
-            // lbStatusD
-            // 
-            this.lbStatusD.AutoSize = true;
-            this.lbStatusD.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbStatusD.Location = new System.Drawing.Point(384, 326);
-            this.lbStatusD.Name = "lbStatusD";
-            this.lbStatusD.Size = new System.Drawing.Size(142, 17);
-            this.lbStatusD.TabIndex = 31;
-            this.lbStatusD.Text = "Detailed Phone Status";
-            // 
-            // tbStatus
-            // 
-            this.tbStatus.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.tbStatus.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbStatus.Location = new System.Drawing.Point(192, 326);
-            this.tbStatus.Name = "tbStatus";
-            this.tbStatus.Size = new System.Drawing.Size(160, 22);
-            this.tbStatus.TabIndex = 10;
-            this.tbStatus.Leave += new System.EventHandler(this.ParamLeaveFocus);
-            // 
-            // lbStatus
-            // 
-            this.lbStatus.AutoSize = true;
-            this.lbStatus.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbStatus.Location = new System.Drawing.Point(49, 326);
-            this.lbStatus.Name = "lbStatus";
-            this.lbStatus.Size = new System.Drawing.Size(57, 17);
-            this.lbStatus.TabIndex = 30;
-            this.lbStatus.Text = "%Status";
-            // 
-            // lbSED
-            // 
-            this.lbSED.AutoSize = true;
-            this.lbSED.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbSED.Location = new System.Drawing.Point(384, 298);
-            this.lbSED.Name = "lbSED";
-            this.lbSED.Size = new System.Drawing.Size(122, 17);
-            this.lbSED.TabIndex = 28;
-            this.lbSED.Text = "Start or End of Call";
-            // 
-            // tbSE
-            // 
-            this.tbSE.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.tbSE.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbSE.Location = new System.Drawing.Point(192, 298);
-            this.tbSE.Name = "tbSE";
-            this.tbSE.Size = new System.Drawing.Size(160, 22);
-            this.tbSE.TabIndex = 9;
-            this.tbSE.Leave += new System.EventHandler(this.ParamLeaveFocus);
-            // 
-            // lbSE
-            // 
-            this.lbSE.AutoSize = true;
-            this.lbSE.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbSE.Location = new System.Drawing.Point(49, 298);
-            this.lbSE.Name = "lbSE";
-            this.lbSE.Size = new System.Drawing.Size(33, 17);
-            this.lbSE.TabIndex = 27;
-            this.lbSE.Text = "%SE";
-            // 
-            // lbIOD
-            // 
-            this.lbIOD.AutoSize = true;
-            this.lbIOD.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbIOD.Location = new System.Drawing.Point(384, 270);
-            this.lbIOD.Name = "lbIOD";
-            this.lbIOD.Size = new System.Drawing.Size(169, 17);
-            this.lbIOD.TabIndex = 25;
-            this.lbIOD.Text = "Inbound or Outbound Call";
-            // 
-            // tbIO
-            // 
-            this.tbIO.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.tbIO.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbIO.Location = new System.Drawing.Point(192, 270);
-            this.tbIO.Name = "tbIO";
-            this.tbIO.Size = new System.Drawing.Size(160, 22);
-            this.tbIO.TabIndex = 8;
-            this.tbIO.Leave += new System.EventHandler(this.ParamLeaveFocus);
-            // 
-            // lbIO
-            // 
-            this.lbIO.AutoSize = true;
-            this.lbIO.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbIO.Location = new System.Drawing.Point(49, 270);
-            this.lbIO.Name = "lbIO";
-            this.lbIO.Size = new System.Drawing.Size(33, 17);
-            this.lbIO.TabIndex = 24;
-            this.lbIO.Text = "%IO";
-            // 
-            // lbNameD
-            // 
-            this.lbNameD.AutoSize = true;
-            this.lbNameD.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbNameD.Location = new System.Drawing.Point(384, 242);
-            this.lbNameD.Name = "lbNameD";
-            this.lbNameD.Size = new System.Drawing.Size(98, 17);
-            this.lbNameD.TabIndex = 22;
-            this.lbNameD.Text = "Caller ID Name";
-            // 
-            // tbName
-            // 
-            this.tbName.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.tbName.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbName.Location = new System.Drawing.Point(192, 242);
-            this.tbName.Name = "tbName";
-            this.tbName.Size = new System.Drawing.Size(160, 22);
-            this.tbName.TabIndex = 7;
-            this.tbName.Leave += new System.EventHandler(this.ParamLeaveFocus);
-            // 
-            // lbName
-            // 
-            this.lbName.AutoSize = true;
-            this.lbName.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbName.Location = new System.Drawing.Point(49, 242);
-            this.lbName.Name = "lbName";
-            this.lbName.Size = new System.Drawing.Size(55, 17);
-            this.lbName.TabIndex = 21;
-            this.lbName.Text = "%Name";
-            // 
-            // lbPhoneD
-            // 
-            this.lbPhoneD.AutoSize = true;
-            this.lbPhoneD.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbPhoneD.Location = new System.Drawing.Point(384, 214);
-            this.lbPhoneD.Name = "lbPhoneD";
-            this.lbPhoneD.Size = new System.Drawing.Size(112, 17);
-            this.lbPhoneD.TabIndex = 19;
-            this.lbPhoneD.Text = "Caller ID Number";
-            // 
-            // tbPhone
-            // 
-            this.tbPhone.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.tbPhone.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbPhone.Location = new System.Drawing.Point(192, 214);
-            this.tbPhone.Name = "tbPhone";
-            this.tbPhone.Size = new System.Drawing.Size(160, 22);
-            this.tbPhone.TabIndex = 6;
-            this.tbPhone.Leave += new System.EventHandler(this.ParamLeaveFocus);
-            // 
-            // lbPhone
-            // 
-            this.lbPhone.AutoSize = true;
-            this.lbPhone.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbPhone.Location = new System.Drawing.Point(49, 214);
-            this.lbPhone.Name = "lbPhone";
-            this.lbPhone.Size = new System.Drawing.Size(58, 17);
-            this.lbPhone.TabIndex = 18;
-            this.lbPhone.Text = "%Phone";
-            // 
-            // lbTimeD
-            // 
-            this.lbTimeD.AutoSize = true;
-            this.lbTimeD.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbTimeD.Location = new System.Drawing.Point(384, 186);
-            this.lbTimeD.Name = "lbTimeD";
-            this.lbTimeD.Size = new System.Drawing.Size(137, 17);
-            this.lbTimeD.TabIndex = 16;
-            this.lbTimeD.Text = "Time and Date of Call";
-            // 
-            // tbTime
-            // 
-            this.tbTime.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.tbTime.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbTime.Location = new System.Drawing.Point(192, 186);
-            this.tbTime.Name = "tbTime";
-            this.tbTime.Size = new System.Drawing.Size(160, 22);
-            this.tbTime.TabIndex = 5;
-            this.tbTime.Leave += new System.EventHandler(this.ParamLeaveFocus);
-            // 
-            // lbTime
-            // 
-            this.lbTime.AutoSize = true;
-            this.lbTime.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbTime.Location = new System.Drawing.Point(49, 186);
-            this.lbTime.Name = "lbTime";
-            this.lbTime.Size = new System.Drawing.Size(48, 17);
-            this.lbTime.TabIndex = 15;
-            this.lbTime.Text = "%Time";
-            // 
-            // lbLineD
-            // 
-            this.lbLineD.AutoSize = true;
-            this.lbLineD.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbLineD.Location = new System.Drawing.Point(384, 158);
-            this.lbLineD.Name = "lbLineD";
-            this.lbLineD.Size = new System.Drawing.Size(111, 17);
-            this.lbLineD.TabIndex = 13;
-            this.lbLineD.Text = "Call Line Number";
-            // 
-            // tbLine
-            // 
-            this.tbLine.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.tbLine.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbLine.Location = new System.Drawing.Point(192, 158);
-            this.tbLine.Name = "tbLine";
-            this.tbLine.Size = new System.Drawing.Size(160, 22);
-            this.tbLine.TabIndex = 4;
-            this.tbLine.Leave += new System.EventHandler(this.ParamLeaveFocus);
-            // 
-            // lbLine
-            // 
-            this.lbLine.AutoSize = true;
-            this.lbLine.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbLine.Location = new System.Drawing.Point(49, 158);
-            this.lbLine.Name = "lbLine";
-            this.lbLine.Size = new System.Drawing.Size(43, 17);
-            this.lbLine.TabIndex = 12;
-            this.lbLine.Text = "%Line";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(384, 132);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(85, 17);
-            this.label7.TabIndex = 11;
-            this.label7.Text = "Descriptions";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(189, 132);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(163, 17);
-            this.label6.TabIndex = 10;
-            this.label6.Text = "Your Parameter Variables";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(6, 132);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(146, 17);
-            this.label5.TabIndex = 9;
-            this.label5.Text = "CallerID.com Variables";
-            // 
             // tbGeneratedURL
             // 
             this.tbGeneratedURL.BackColor = System.Drawing.SystemColors.ControlLightLight;
@@ -778,7 +802,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(28, 110);
+            this.label2.Location = new System.Drawing.Point(28, 105);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(41, 13);
             this.label2.TabIndex = 6;
@@ -788,7 +812,7 @@
             // 
             this.tbServer.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.tbServer.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tbServer.Location = new System.Drawing.Point(75, 107);
+            this.tbServer.Location = new System.Drawing.Point(75, 102);
             this.tbServer.Name = "tbServer";
             this.tbServer.Size = new System.Drawing.Size(616, 22);
             this.tbServer.TabIndex = 3;
@@ -807,29 +831,30 @@
             // gbLog
             // 
             this.gbLog.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.gbLog.Controls.Add(this.btnClearLog);
+            this.gbLog.Controls.Add(this.btnLogs);
             this.gbLog.Controls.Add(this.dgvLog);
             this.gbLog.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.gbLog.Location = new System.Drawing.Point(15, 672);
+            this.gbLog.Location = new System.Drawing.Point(15, 662);
             this.gbLog.Name = "gbLog";
-            this.gbLog.Size = new System.Drawing.Size(697, 127);
+            this.gbLog.Size = new System.Drawing.Size(666, 127);
             this.gbLog.TabIndex = 7;
             this.gbLog.TabStop = false;
             this.gbLog.Text = "Log";
             // 
-            // btnClearLog
+            // btnLogs
             // 
-            this.btnClearLog.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnClearLog.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnClearLog.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnClearLog.Location = new System.Drawing.Point(672, 21);
-            this.btnClearLog.Name = "btnClearLog";
-            this.btnClearLog.Size = new System.Drawing.Size(19, 100);
-            this.btnClearLog.TabIndex = 42;
-            this.btnClearLog.TabStop = false;
-            this.btnClearLog.Text = "CLEAR";
-            this.btnClearLog.UseVisualStyleBackColor = true;
-            this.btnClearLog.Click += new System.EventHandler(this.BtnClearLog_Click);
+            this.btnLogs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnLogs.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnLogs.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnLogs.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnLogs.Location = new System.Drawing.Point(42, -5);
+            this.btnLogs.Name = "btnLogs";
+            this.btnLogs.Size = new System.Drawing.Size(103, 23);
+            this.btnLogs.TabIndex = 43;
+            this.btnLogs.TabStop = false;
+            this.btnLogs.Text = "open logs folder";
+            this.btnLogs.UseVisualStyleBackColor = true;
+            this.btnLogs.Click += new System.EventHandler(this.btnLogs_Click);
             // 
             // dgvLog
             // 
@@ -837,7 +862,6 @@
             this.dgvLog.AllowUserToDeleteRows = false;
             this.dgvLog.BackgroundColor = System.Drawing.SystemColors.Control;
             this.dgvLog.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.dgvLog.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvLog.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colLine,
             this.colInOut,
@@ -856,7 +880,7 @@
             this.dgvLog.ReadOnly = true;
             this.dgvLog.RowHeadersVisible = false;
             this.dgvLog.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Segoe UI", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dgvLog.Size = new System.Drawing.Size(691, 103);
+            this.dgvLog.Size = new System.Drawing.Size(660, 103);
             this.dgvLog.TabIndex = 0;
             this.dgvLog.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvLog_CellContentClick);
             // 
@@ -898,7 +922,7 @@
             this.colRing.HeaderText = "Ring";
             this.colRing.Name = "colRing";
             this.colRing.ReadOnly = true;
-            this.colRing.Width = 50;
+            this.colRing.Width = 40;
             // 
             // colDate
             // 
@@ -906,7 +930,7 @@
             this.colDate.HeaderText = "Date & Time";
             this.colDate.Name = "colDate";
             this.colDate.ReadOnly = true;
-            this.colDate.Width = 150;
+            this.colDate.Width = 135;
             // 
             // colNumber
             // 
@@ -914,7 +938,7 @@
             this.colNumber.HeaderText = "Number";
             this.colNumber.Name = "colNumber";
             this.colNumber.ReadOnly = true;
-            this.colNumber.Width = 125;
+            this.colNumber.Width = 110;
             // 
             // colName
             // 
@@ -946,6 +970,21 @@
             this.dgvLogColText.Name = "dgvLogColText";
             this.dgvLogColText.ReadOnly = true;
             this.dgvLogColText.Visible = false;
+            // 
+            // btnClearLog
+            // 
+            this.btnClearLog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnClearLog.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnClearLog.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnClearLog.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnClearLog.Location = new System.Drawing.Point(690, 678);
+            this.btnClearLog.Name = "btnClearLog";
+            this.btnClearLog.Size = new System.Drawing.Size(19, 100);
+            this.btnClearLog.TabIndex = 42;
+            this.btnClearLog.TabStop = false;
+            this.btnClearLog.Text = "CLEAR";
+            this.btnClearLog.UseVisualStyleBackColor = true;
+            this.btnClearLog.Click += new System.EventHandler(this.BtnClearLog_Click);
             // 
             // timerShowBoundPort
             // 
@@ -984,6 +1023,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(724, 811);
+            this.Controls.Add(this.btnClearLog);
             this.Controls.Add(this.gbLog);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.gbDevSection);
@@ -1009,6 +1049,8 @@
             this.panel2.PerformLayout();
             this.gbDevSection.ResumeLayout(false);
             this.gbDevSection.PerformLayout();
+            this.panScrollArea.ResumeLayout(false);
+            this.panScrollArea.PerformLayout();
             this.gbLog.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvLog)).EndInit();
             this.ResumeLayout(false);
@@ -1086,6 +1128,7 @@
         private System.Windows.Forms.CheckBox ckbHideInSystemTray;
         private System.Windows.Forms.Timer timerSySTrayHide;
         private System.Windows.Forms.Timer timerDuplicateHandling;
+        private System.Windows.Forms.Panel panScrollArea;
         private System.Windows.Forms.DataGridViewTextBoxColumn colLine;
         private System.Windows.Forms.DataGridViewTextBoxColumn colInOut;
         private System.Windows.Forms.DataGridViewTextBoxColumn colStartEnd;
@@ -1097,6 +1140,8 @@
         private System.Windows.Forms.DataGridViewButtonColumn dgvLogSuccess;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvLogID;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgvLogColText;
+        private System.Windows.Forms.Button btnLogs;
+        private System.Windows.Forms.CheckBox ckbIgnoreChannelOverflow;
     }
 }
 

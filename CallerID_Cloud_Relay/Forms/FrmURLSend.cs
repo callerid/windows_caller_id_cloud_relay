@@ -13,6 +13,7 @@ using CallerID_Cloud_Relay.Classes;
 using System.Net;
 using System.IO;
 using System.Globalization;
+using System.Diagnostics;
 
 namespace CallerID_Cloud_Relay
 {
@@ -105,6 +106,7 @@ namespace CallerID_Cloud_Relay
 
             // Add to log
             AddToCallLog(cRecord, log_id);
+            Common.WriteToCallLog(cRecord.Reception);
 
             // POST TO CLOUD
             PostCallToCloud(cRecord, log_id);
@@ -247,6 +249,11 @@ namespace CallerID_Cloud_Relay
         {
             InitializeComponent();
 
+            if(!Directory.Exists(Application.StartupPath + "\\logs\\"))
+            {
+                Directory.CreateDirectory(Application.StartupPath + "\\logs\\");
+            }
+
             ContextMenu sysTrayMenu = new ContextMenu();
             MenuItem itemClose = new MenuItem();
             itemClose.Text = "Exit Cloud Relay";
@@ -268,6 +275,7 @@ namespace CallerID_Cloud_Relay
             
             // Load old values -----------------------------------------------------------
             ckbRequiresAuthenication.Checked = Properties.Settings.Default.usesAuth;
+            ckbIgnoreChannelOverflow.Checked = Properties.Settings.Default.ignoreOverflow;
             tbUsername.Text = Properties.Settings.Default.username;
             tbPassword.Text = Properties.Settings.Default.password;
 
@@ -310,12 +318,23 @@ namespace CallerID_Cloud_Relay
             AuthRequriedCheckChange(new object(), new EventArgs());
             ToggleDevelopersSection(rbUseBuiltUrl.Checked);
 
+            if(Screen.FromControl(this).Bounds.Height <= 768)
+            {
+                panScrollArea.Height = 190;
+                gbLog.Location = new Point(gbLog.Location.X, gbLog.Location.Y - 50);
+                btnClearLog.Location = new Point(btnClearLog.Location.X, btnClearLog.Location.Y - 50);
+            }
+
+            sysTray.Visible = true;
+            sysTray.ShowBalloonTip(500);
+
         }
 
         private void FrmURLSend_FormClosing(object sender, FormClosingEventArgs e)
         {
             // Save all settings
             Properties.Settings.Default.hideInSystemTray = ckbHideInSystemTray.Checked;
+            Properties.Settings.Default.ignoreOverflow = ckbIgnoreChannelOverflow.Checked;
 
             Properties.Settings.Default.usesAuth = ckbRequiresAuthenication.Checked;
             Properties.Settings.Default.username = tbUsername.Text;
@@ -761,9 +780,20 @@ namespace CallerID_Cloud_Relay
 
             if(!urlFull.Contains("?"))
             {
-                Common.MsgBox("Error Parsing URL", Environment.NewLine + Environment.NewLine + "Could not parse URL. There is no separation between URL and Params.", true, 1000);
+                Common.MsgBox("Error Parsing URL", Environment.NewLine + Environment.NewLine + "Could not parse URL. There is no separation between URL and Params. Or empty URL");
+                Common.WriteToLog("Error parsing URL. No '?' found in Post.");
                 return;
             }
+
+            if(number != null && !string.IsNullOrEmpty(number))
+            {
+                string num = number.Trim();
+                num = num.Substring(num.Length - 2);
+                if (num == "xx" && ckbIgnoreChannelOverflow.Checked)
+                {
+                    number = "000-000-0000";
+                }
+            }            
             
             var parts = urlFull.Split('?');
 
@@ -793,53 +823,75 @@ namespace CallerID_Cloud_Relay
 
             var data = Encoding.ASCII.GetBytes(postData);
             HttpWebRequest request = null;
-            try
+            bool sent = false;
+            if (!ckbRequiresAuthenication.Checked)
             {
-                request = (HttpWebRequest)WebRequest.Create(url + "?" + postData);
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-                Common.MsgBox("Invalid URL", Environment.NewLine + Environment.NewLine + "Url is not in valid format.", false, 4000);
-                return;
-            }
-
-            request.Method = "POST";
-            request.ContentType = "application/x-www-form-urlencoded";
-            request.ContentLength = data.Length;
-
-            if (ckbRequiresAuthenication.Checked)
-            {
-                String encoded = Convert.ToBase64String(Encoding.GetEncoding("ISO-8859-1").GetBytes(tbUsername.Text + ":" + tbPassword.Text));
-                request.Headers.Add("Authorization", "Basic " + encoded);
-            }
-
-            string response_string = "";
-            HttpWebResponse response = null;
-            try
-            {
-                using (var stream = request.GetRequestStream())
+                WebClient client = new WebClient();
+                string log = "";
+                try
                 {
-                    stream.Write(data, 0, data.Length);
+                    log = client.DownloadString(url + "?" + postData);
+                    UpdateDGVWithLogID(log_id, log);
+                    sent = true;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                    Common.MsgBox("Invalid URL", Environment.NewLine + Environment.NewLine + "Url is not in valid format.", false, 4000);
+                    Common.WriteToLog("Url is not in valid format.");
+                    return;
+                }
+            }
+
+            if (!sent)
+            {
+                try
+                {
+                    request = (HttpWebRequest)WebRequest.Create(url + "?" + postData);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                    Common.MsgBox("Invalid URL", Environment.NewLine + Environment.NewLine + "Url is not in valid format.", false, 4000);
+                    Common.WriteToLog("Url is not in valid format.");
+                    return;
                 }
 
-                response = (HttpWebResponse)request.GetResponse();
+                request.Method = "POST";
+                request.ContentType = "application/x-www-form-urlencoded";
+                request.ContentLength = data.Length;
 
-                response_string = new StreamReader(response.GetResponseStream()).ReadToEnd();
-                Console.WriteLine(response_string);
-                UpdateDGVWithLogID(log_id, response_string);
+                if (ckbRequiresAuthenication.Checked)
+                {
+                    String encoded = Convert.ToBase64String(Encoding.GetEncoding("ISO-8859-1").GetBytes(tbUsername.Text + ":" + tbPassword.Text));
+                    request.Headers.Add("Authorization", "Basic " + encoded);
+                }
 
-                response.Close();
+                string response_string = "";
+                HttpWebResponse response = null;
+                try
+                {
+                    using (var stream = request.GetRequestStream())
+                    {
+                        stream.Write(data, 0, data.Length);
+                    }
 
+                    response = (HttpWebResponse)request.GetResponse();
+
+                    response_string = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                    Console.WriteLine(response_string);
+                    UpdateDGVWithLogID(log_id, response_string);
+
+                    response.Close();
+
+                }
+                catch (Exception ex)
+                {
+                    Common.MsgBox("URL Error", Environment.NewLine + "Error connecting to server." + Environment.NewLine + Environment.NewLine + ex.ToString(), false, 5000);
+
+                    Common.WriteToLog("URL ERROR: " + ex.ToString());
+                }
             }
-            catch (Exception ex)
-            {
-                Common.MsgBox("URL Error", Environment.NewLine + "Error connecting to server." + Environment.NewLine + Environment.NewLine + ex.ToString(), false, 5000);
-
-                Common.WriteToLog(ex.ToString());
-            }
-
-            
         }
 
         private void UpdateDGVWithLogID(string log_id, string text)
@@ -909,8 +961,6 @@ namespace CallerID_Cloud_Relay
 
         private void GotoBackground()
         {
-            sysTray.Visible = true;
-            sysTray.ShowBalloonTip(500);
             this.Hide();
         }
 
@@ -918,7 +968,6 @@ namespace CallerID_Cloud_Relay
         {
             Program.FUrlSend.Show();
             Program.FUrlSend.WindowState = FormWindowState.Normal;
-            sysTray.Visible = false;
             LoadLog();
         }
 
@@ -1001,6 +1050,11 @@ namespace CallerID_Cloud_Relay
             {
                 Common.MsgBox("Response From Server", dgvLog.Rows[row].Cells[logColText].Value.ToString());
             }
+        }
+
+        private void btnLogs_Click(object sender, EventArgs e)
+        {
+            Process.Start("explorer.exe", Application.StartupPath + "\\logs\\");
         }
     }
 }
