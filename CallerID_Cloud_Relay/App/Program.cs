@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Windows.Forms;
@@ -9,10 +10,12 @@ namespace CallerID_Cloud_Relay
 {
     static class Program
     {
+
         public static FrmURLSend FUrlSend;
         public static FrmPopup FPopupMessage;
-        public static string ErrorLogFile = Application.StartupPath + "\\logs\\error_log.txt";
-        public static string CallLogFile = Application.StartupPath + "\\logs\\call_log.txt";
+        public static string LogDir =       Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments) + "\\CallerID.com\\CloudRelay\\logs\\");
+        public static string ErrorLogFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments) + "\\CallerID.com\\CloudRelay\\logs\\error_log.txt");
+        public static string CallLogFile =  Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments) + "\\CallerID.com\\CloudRelay\\logs\\call_log.txt");
 
         [STAThread]
         static void Main()

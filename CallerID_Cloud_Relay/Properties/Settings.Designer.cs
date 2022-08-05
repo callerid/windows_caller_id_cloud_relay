@@ -86,30 +86,6 @@ namespace CallerID_Cloud_Relay.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string suppliedUrl {
-            get {
-                return ((string)(this["suppliedUrl"]));
-            }
-            set {
-                this["suppliedUrl"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("[you must first generate your URL]")]
-        public string builtUrl {
-            get {
-                return ((string)(this["builtUrl"]));
-            }
-            set {
-                this["builtUrl"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string server {
             get {
                 return ((string)(this["server"]));

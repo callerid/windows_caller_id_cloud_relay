@@ -201,8 +201,6 @@
             // ckbRequiresAuthenication
             // 
             this.ckbRequiresAuthenication.AutoSize = true;
-            this.ckbRequiresAuthenication.Checked = true;
-            this.ckbRequiresAuthenication.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ckbRequiresAuthenication.Cursor = System.Windows.Forms.Cursors.Hand;
             this.ckbRequiresAuthenication.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ckbRequiresAuthenication.Location = new System.Drawing.Point(19, 30);

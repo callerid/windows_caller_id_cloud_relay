@@ -17,12 +17,6 @@
     <Setting Name="useDeluxe" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="suppliedUrl" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="builtUrl" Type="System.String" Scope="User">
-      <Value Profile="(Default)">[you must first generate your URL]</Value>
-    </Setting>
     <Setting Name="server" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>

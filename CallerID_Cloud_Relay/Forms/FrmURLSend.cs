@@ -23,7 +23,39 @@ namespace CallerID_Cloud_Relay
 
         // Database
         CID_Database callLog;
-        
+
+        // URL file
+        private string URLDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments) + "\\CallerID.com\\CloudRelay\\");
+        private string URLFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments) + "\\CallerID.com\\CloudRelay\\cid.dat");
+
+        // URL Format
+        private int SL_HIDE = 0;
+        private int SL_OVERFLOW = 1;
+        private int SL_AUTH = 2;
+        private int SL_USER = 3;
+        private int SL_PASS = 4;
+        private int SL_SUPPLIED = 5;
+        private int SL_DELUXE = 6;
+        private int SL_SUPPLIED_URL = 7;
+        private int SL_BUILT_URL = 8;
+        private int SL_SERVER = 9;
+        private int SL_LINE = 10;
+        private int SL_TIME = 11;
+        private int SL_PHONE = 12;
+        private int SL_NAME = 13;
+        private int SL_IO = 14;
+        private int SL_SE = 15;
+        private int SL_STATUS = 16;
+        private int SL_DUR = 17;
+        private int SL_RINGNUM = 18;
+        private int SL_RINGTYPE = 19;
+        private int SL_SYS_TRAY = 20;
+
+        private int SL_COUNT = 21;
+
+        private bool UseSystemTray = false;
+        // ---------------------
+
         // Names of all Deluxe controls
         private List<string> deluxeNames = new List<string>();
 
@@ -274,42 +306,75 @@ namespace CallerID_Cloud_Relay
             FillDeluxeNames();
             
             // Load old values -----------------------------------------------------------
-            ckbRequiresAuthenication.Checked = Properties.Settings.Default.usesAuth;
-            ckbIgnoreChannelOverflow.Checked = Properties.Settings.Default.ignoreOverflow;
-            tbUsername.Text = Properties.Settings.Default.username;
-            tbPassword.Text = Properties.Settings.Default.password;
-
-            rbUseSuppliedUrl.Checked = Properties.Settings.Default.useSupplied;
-            rbUseBuiltUrl.Checked = !Properties.Settings.Default.useSupplied;
-
-            rbDeluxeUnit.Checked = Properties.Settings.Default.useDeluxe;
-            rbBasicUnit.Checked = !Properties.Settings.Default.useDeluxe;
-
-            tbSuppliedURL.Text = Properties.Settings.Default.suppliedUrl;
-
-            if (!Properties.Settings.Default.builtUrl.Contains("http") && !Properties.Settings.Default.builtUrl.Contains("www"))
+            bool readIn = false;
+            if (!Directory.Exists(URLDirectory))
             {
-                tbGeneratedURL.Text = "[you must first generate your URL]";
-                tbGeneratedURL.ForeColor = Color.Maroon;
-            }
-            else
-            {
-                tbGeneratedURL.Text = Properties.Settings.Default.builtUrl;
-                tbGeneratedURL.ForeColor = Color.Green;
+                Directory.CreateDirectory(URLDirectory);
             }
 
-            tbServer.Text = Properties.Settings.Default.server;
+            tbGeneratedURL.Text = "[you must first generate your URL]";
+            tbGeneratedURL.ForeColor = Color.Maroon;
 
-            tbLine.Text = Properties.Settings.Default.line;
-            tbTime.Text = Properties.Settings.Default.time;
-            tbPhone.Text = Properties.Settings.Default.phone;
-            tbName.Text = Properties.Settings.Default.name;
-            tbIO.Text = Properties.Settings.Default.io;
-            tbSE.Text = Properties.Settings.Default.se;
-            tbStatus.Text = Properties.Settings.Default.status;
-            tbDuration.Text = Properties.Settings.Default.duration;
-            tbRingNumber.Text = Properties.Settings.Default.ringNumber;
-            tbRingType.Text = Properties.Settings.Default.ringType;
+            if (File.Exists(URLFile))
+            {
+                string[] lines = File.ReadAllLines(URLFile);
+
+                if(lines.Length == SL_COUNT)
+                {
+                    UseSystemTray = lines[SL_SYS_TRAY] == "True";
+                    ckbHideInSystemTray.Checked = UseSystemTray;
+
+                    ckbRequiresAuthenication.Checked = lines[SL_AUTH] == "True";
+                    ckbIgnoreChannelOverflow.Checked = lines[SL_OVERFLOW] == "True";
+                    tbUsername.Text = lines[SL_USER];
+                    tbPassword.Text = lines[SL_PASS];
+
+                    rbUseSuppliedUrl.Checked = lines[SL_SUPPLIED] == "True";
+                    rbUseBuiltUrl.Checked = lines[SL_SUPPLIED] != "True";
+
+                    rbDeluxeUnit.Checked = lines[SL_DELUXE] == "True";
+                    rbBasicUnit.Checked =  lines[SL_DELUXE] != "True";
+
+                    tbSuppliedURL.Text = lines[SL_SUPPLIED_URL];
+                    tbGeneratedURL.Text = lines[SL_BUILT_URL];
+
+                    if (!(!tbGeneratedURL.Text.Contains("http") && !tbGeneratedURL.Text.Contains("www")))
+                    {
+                        tbGeneratedURL.ForeColor = Color.Green;
+                    }
+
+                    tbServer.Text = lines[SL_SERVER];
+
+                    tbLine.Text = lines[SL_LINE];
+                    tbTime.Text = lines[SL_TIME];
+                    tbPhone.Text = lines[SL_PHONE];
+                    tbName.Text = lines[SL_NAME];
+                    tbIO.Text = lines[SL_IO];
+                    tbSE.Text = lines[SL_SE];
+                    tbStatus.Text = lines[SL_STATUS];
+                    tbDuration.Text = lines[SL_DUR];
+                    tbRingNumber.Text = lines[SL_RINGNUM];
+                    tbRingType.Text = lines[SL_RINGTYPE];
+
+                    readIn = true;
+                }
+            }
+            
+            if (!readIn)
+            {
+                tbSuppliedURL.Text = "";
+
+                if (!tbGeneratedURL.Text.Contains("http") && !tbGeneratedURL.Text.Contains("www"))
+                {
+                    tbGeneratedURL.Text = "[you must first generate your URL]";
+                    tbGeneratedURL.ForeColor = Color.Maroon;
+                }
+                else
+                {
+                    tbGeneratedURL.ForeColor = Color.Green;
+                }
+            }
+
             //--------------------------------------------------------------------------
 
             // Call toggle functions
@@ -332,34 +397,51 @@ namespace CallerID_Cloud_Relay
 
         private void FrmURLSend_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // Save all settings
-            Properties.Settings.Default.hideInSystemTray = ckbHideInSystemTray.Checked;
-            Properties.Settings.Default.ignoreOverflow = ckbIgnoreChannelOverflow.Checked;
+            if (!Directory.Exists(URLDirectory))
+            {
+                Directory.CreateDirectory(URLDirectory);
+            }
 
-            Properties.Settings.Default.usesAuth = ckbRequiresAuthenication.Checked;
-            Properties.Settings.Default.username = tbUsername.Text;
-            Properties.Settings.Default.password = tbPassword.Text;
+            string[] lines = new string[SL_COUNT];
 
-            Properties.Settings.Default.useSupplied = rbUseSuppliedUrl.Checked;
-            Properties.Settings.Default.useDeluxe = rbDeluxeUnit.Checked;
+            lines[SL_HIDE] = ckbHideInSystemTray.Checked ? "True" : "False";
+            lines[SL_OVERFLOW] = ckbIgnoreChannelOverflow.Checked ? "True" : "False";
+            
+            lines[SL_AUTH] = ckbRequiresAuthenication.Checked ? "True" : "False";
+            lines[SL_USER] = tbUsername.Text;
+            lines[SL_PASS] = tbPassword.Text;
+            
+            lines[SL_SUPPLIED_URL] = rbUseSuppliedUrl.Checked ? "True" : "False";
+            lines[SL_DELUXE] = rbDeluxeUnit.Checked ? "True" : "False";
+            
+            lines[SL_SUPPLIED_URL] = tbSuppliedURL.Text;
+            lines[SL_BUILT_URL] = tbGeneratedURL.Text;
+            
+            lines[SL_SERVER] = tbServer.Text;
+            
+            lines[SL_LINE] = tbLine.Text;
+            lines[SL_TIME] = tbTime.Text;
+            lines[SL_PHONE] = tbPhone.Text;
+            lines[SL_NAME] = tbName.Text;
+            lines[SL_IO] = tbIO.Text;
+            lines[SL_SE] = tbSE.Text;
+            lines[SL_STATUS] = tbStatus.Text;
+            lines[SL_DUR] = tbDuration.Text;
+            lines[SL_RINGNUM] = tbRingNumber.Text;
+            lines[SL_RINGTYPE] = tbRingType.Text;
 
-            Properties.Settings.Default.suppliedUrl = tbSuppliedURL.Text;
+            lines[SL_SYS_TRAY] = ckbHideInSystemTray.Checked ? "True" : "False";
 
-            Properties.Settings.Default.builtUrl = tbGeneratedURL.Text;
-            Properties.Settings.Default.server = tbServer.Text;
-
-            Properties.Settings.Default.line = tbLine.Text;
-            Properties.Settings.Default.time = tbTime.Text;
-            Properties.Settings.Default.phone = tbPhone.Text;
-            Properties.Settings.Default.name = tbName.Text;
-            Properties.Settings.Default.io = tbIO.Text;
-            Properties.Settings.Default.se = tbSE.Text;
-            Properties.Settings.Default.status = tbStatus.Text;
-            Properties.Settings.Default.duration = tbDuration.Text;
-            Properties.Settings.Default.ringNumber = tbRingNumber.Text;
-            Properties.Settings.Default.ringType = tbRingType.Text;
-
-            Properties.Settings.Default.Save();
+            try
+            {
+                File.WriteAllLines(URLFile, lines.ToArray());
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Settings could not be saved. Error: " + ex.ToString());
+                return;
+            }
+            // -------------------------------------------
 
             if (ckbHideInSystemTray.Checked && !Kill)
             {
@@ -977,7 +1059,7 @@ namespace CallerID_Cloud_Relay
             timerSySTrayHide.Stop();
 
             // Load system tray setting
-            ckbHideInSystemTray.Checked = Properties.Settings.Default.hideInSystemTray;
+            ckbHideInSystemTray.Checked = UseSystemTray;
             if (!ckbHideInSystemTray.Checked)
             {
                 BringToForeground(new object(), new MouseEventArgs(System.Windows.Forms.MouseButtons.Left, 0, 0, 0, 0));
@@ -1054,7 +1136,7 @@ namespace CallerID_Cloud_Relay
 
         private void btnLogs_Click(object sender, EventArgs e)
         {
-            Process.Start("explorer.exe", Application.StartupPath + "\\logs\\");
+            Process.Start("explorer.exe", Program.LogDir);
         }
     }
 }

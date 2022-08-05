@@ -12,7 +12,7 @@ namespace CallerID_Cloud_Relay.Classes
     class CID_Database
     {
         private static SQLiteConnection databaseConnection = null;
-        private static string databaseDir = Application.StartupPath + "\\cid_cloud_relay_call_log.db3";
+        private static string databaseDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonDocuments), "\\CallerID.com\\CloudRelay\\cid_cloud_relay_call_log.db3");
 
         // Static constant queries
         private static string creationString = "CREATE TABLE callLog (ID INTEGER PRIMARY KEY AUTOINCREMENT, line varchar(2), io varchar(1), se varchar(1), duration varchar(4), ring varchar(2), theDateTime varchar(20), number varchar(20), name varchar(20));";

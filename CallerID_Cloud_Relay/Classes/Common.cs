@@ -37,6 +37,7 @@ namespace CallerID_Cloud_Relay.Classes
 
         public static void WriteToCallLog(string text)
         {
+            if (!Directory.Exists(Program.LogDir)) Directory.CreateDirectory(Program.LogDir);
             if (!File.Exists(Program.CallLogFile)) File.Create(Program.CallLogFile).Close();
 
             string old_text = File.ReadAllText(Program.CallLogFile);
