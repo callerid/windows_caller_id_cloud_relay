@@ -411,7 +411,7 @@ namespace CallerID_Cloud_Relay
             lines[SL_USER] = tbUsername.Text;
             lines[SL_PASS] = tbPassword.Text;
             
-            lines[SL_SUPPLIED_URL] = rbUseSuppliedUrl.Checked ? "True" : "False";
+            lines[SL_SUPPLIED] = rbUseSuppliedUrl.Checked ? "True" : "False";
             lines[SL_DELUXE] = rbDeluxeUnit.Checked ? "True" : "False";
             
             lines[SL_SUPPLIED_URL] = tbSuppliedURL.Text;
@@ -918,10 +918,9 @@ namespace CallerID_Cloud_Relay
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.ToString());
-                    Common.MsgBox("Invalid URL", Environment.NewLine + Environment.NewLine + "Url is not in valid format.", false, 4000);
+                    Common.WriteToLog(ex.ToString());
+                    //Common.MsgBox("Invalid URL", Environment.NewLine + Environment.NewLine + "Url is not in valid format.", false, 4000);
                     Common.WriteToLog("Url is not in valid format.");
-                    return;
                 }
             }
 
@@ -933,10 +932,10 @@ namespace CallerID_Cloud_Relay
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.ToString());
-                    Common.MsgBox("Invalid URL", Environment.NewLine + Environment.NewLine + "Url is not in valid format.", false, 4000);
+                    Common.WriteToLog(ex.ToString());
+                    //Common.MsgBox("Invalid URL", Environment.NewLine + Environment.NewLine + "Url is not in valid format.", false, 4000);
                     Common.WriteToLog("Url is not in valid format.");
-                    return;
+                    
                 }
 
                 request.Method = "POST";

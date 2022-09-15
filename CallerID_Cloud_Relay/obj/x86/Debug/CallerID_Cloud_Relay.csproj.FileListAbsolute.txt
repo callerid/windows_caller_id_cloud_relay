@@ -26,4 +26,4 @@ F:\Projects\Visual Studio Projects\CallerID_Cloud_Relay\CallerID_Cloud_Relay\obj
 F:\Projects\Visual Studio Projects\CallerID_Cloud_Relay\CallerID_Cloud_Relay\obj\x86\Debug\CallerID_Cloud_Relay.csproj.CopyComplete
 F:\Projects\Visual Studio Projects\CallerID_Cloud_Relay\CallerID_Cloud_Relay\obj\x86\Debug\CallerID_Cloud_Relay.exe
 F:\Projects\Visual Studio Projects\CallerID_Cloud_Relay\CallerID_Cloud_Relay\obj\x86\Debug\CallerID_Cloud_Relay.pdb
-F:\Projects\Visual Studio Projects\CallerID_Cloud_Relay\CallerID_Cloud_Relay\obj\x86\Debug\CallerID_Cloud_Relay.csprojAssemblyReference.cache
+F:\Projects\Visual Studio Projects\CallerID_Cloud_Relay\CallerID_Cloud_Relay\obj\x86\Debug\CallerID_Cloud_Relay.csproj.AssemblyReference.cache
